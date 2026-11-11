@@ -29,6 +29,11 @@ python3.12 -m venv .ave-local/venv
 
 Grafik gerekmiyorsa `requirements.txt` yeterlidir. Raporu yeniden oluşturmak için `requirements-report.txt` içindeki ek paketler gerekir.
 
+```bash
+.ave-local/venv/bin/python -m pip install -r requirements-report.txt
+.ave-local/venv/bin/python -B scripts/build_report.py --repo-url https://github.com/yasarkasa/yzm5110-ave-audio-shifts --published
+```
+
 ## Veri ve model erişimi
 
 Hazırlama betiği yazar deposunu `93f843fed72fb17394df76330df958b0c2dbde76` revizyonuna sabitler. Etiketler, bölüm listeleri ve ağırlıklar bu checkout'tan okunur. Görüntü özellikleri yazarların bağlantısından doğrulanmış HTTP aralıklarıyla indirilir. Ses, kayda alınmış SHA-256 özetiyle kontrol edilen LECOO/AVE aynasından gelir. Veriler `.ave-local/` içinde saklanır.

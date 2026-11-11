@@ -14,7 +14,7 @@ Konu sınıf tablosunda kayıtlı. [Beş makalenin karşılaştırması ve liter
 | 4 | 14 Kasım | **Zaman kayması deneyini kur. Tamamlandı.** Görüntü ve etiketler sabitken ses 0, ±1 ve ±2 saniye kaydırıldı. Her kayma, aynı sınır maskesini alan kaydırmasız kontrolle karşılaştırıldı. | 402 doğrulama klibinde beş koşul çalıştı. [Kaydırma betiği](scripts/ave_shift.py) ve [sonuç kaydı](results/ave_shift_validation.json) hazır. |
 | 5 | 15 Kasım | **Bir iyileştirme ve kontrol seç. Tamamlandı.** Yerel ses ortalaması ve norm eşlemeli ablasyon doğrulama bölümünde ölçüldü. | ±2 saniyede referansa göre +0,60 yüzde puanı. Tekli CPU gecikmesi kaydedildi ve [deney ayarları](configs/ave_improvement.json) sabitlendi. |
 | 6 | 16 Kasım | **Nihai testi çalıştır ve sonuçları yorumla. Tamamlandı.** Üç yöntem 402 özgün test klibinde beş kayma ve eş maskeli kontrollerle değerlendirildi. | [Test raporu](results/ave_test_report.md), [doğruluk grafiği](results/ave_test_accuracy.png), güven aralıkları, gecikme ve hata analizi. |
-| 7 | 17 Kasım | **Yerel teslim adayı hazırlandı.** 13 sayfalık rapor, 15 slaytlık sunum, kurulum/veri hazırlama ve sonuç üretim komutları eklendi. | Rapor ve sunum `output/` altında. Herkese açık GitHub oluşturma, açık paylaşım onayı bekliyor. |
+| 7 | 17 Kasım | **Rapor, sunum ve açık depo hazırlandı.** 13 sayfalık rapor, 15 slaytlık sunum, kurulum/veri hazırlama ve sonuç üretim komutları eklendi. | Rapor ve sunum `output/` altında. [Herkese açık GitHub deposu](https://github.com/yasarkasa/yzm5110-ave-audio-shifts). Öğrencinin sözlü provası teslim öncesinde yapılacak. |
 | 8 | 18 Kasım, sunumdan önce | **Teslim et.** Araştırma projesi sayfasına depo bağlantısını ve PDF'yi ekle. Kaydın tamamlandığını doğrula. | Ders sayfasında tamamlanmış teslim. |
 
 Özgün veri veya kodla ilgili bir engel çıkarsa önce yazarların sunduğu hazır özellikler ve çalıştırma yolları kontrol edilir. Daha küçük bir yeniden üretim gerekirse hangi veri, model veya bütçenin değiştiği kaydedilir. Kayma etkisi ve iyileştirme aynı uyarlanmış referans üzerinde ölçülür.
@@ -126,7 +126,7 @@ Olay varlığı hedef ve ses kaynağı saniyeleri arasında değişen bölümler
 
 `README.md`, sabit bağımlılıklar, `prepare_ave.py`, küçük çalıştırma kontrolü ve sonuç JSON'undan tablo üretimi eklendi. Mevcut önbellekle veri hazırlama ve üç kliplik model kontrolü çalıştırıldı. Temiz bir makinede sıfırdan bütün indirme ve kurulum henüz yeniden denenmedi. Veri, ortam, büyük checkpoint'ler ve ders PDF'leri Git dışında tutuluyor. Codex'in somut katkıları raporda, son slaytta ve `AI_USAGE.md` içinde açıklanıyor.
 
-Planlanan depo `https://github.com/yasarkasa/yzm5110-ave-audio-shifts`. GitHub hesabına erişim doğrulandı. Herkese açık oluşturma otomatik onay incelemesinde, açık paylaşım için ayrı kullanıcı yetkisi gerektiği gerekçesiyle durduruldu. Yerel teslim adayı `submission-v1-rc1` etiketiyle korunacak. Son yayımlama ve nihai `submission-v1` etiketi açık paylaşım onayından sonra tamamlanacak.
+Depo `https://github.com/yasarkasa/yzm5110-ave-audio-shifts`. İlk herkese açık oluşturma denemesi otomatik onay incelemesinde durduruldu. Kullanıcının 11 Kasım'daki açık onayı ardından depo oluşturuldu ve dosyalar GitHub Desktop ile gönderildi. İlk yerel teslim adayı `submission-v1-rc1`, nihai teslim sürümü `submission-v1` etiketiyle tanımlanır.
 
 Sunum süresi yönergede belirtilmedi. Konuşmacı notları teknik savunmayı destekleyecek biçimde yazıldı. Öğrencinin kaynakları okuyup uygulamayı anladığını doğrulaması ve sözlü prova yapması teslim öncesinde tamamlanmalıdır.
 
@@ -209,3 +209,4 @@ Kaydırma ve maskeleme kodu Adım 4'te doğrulama bölümünde kontrol edildi. S
 - **10 Kasım 2026 · Codex.** Doğrulama hatalarını olay aralıklarına göre inceledi. Yerel ses ortalamasını, norm eşlemeli ablasyonu ve gecikme ölçümünü uyguladı. Deney ayarlarını kaydetti ve doğrulama sonuçlarını kontrol etti.
 - **10 Kasım 2026 · Codex.** Sabit ayarlarla özgün test koşusunu, kaynak video düzeyinde bootstrap ve örtüşme analizini uyguladı. Tahminlerden doğrulukları yeniden hesapladı, grafiği üretti ve düzelen veya yeni oluşan hataları belgeledi.
 - **11 Kasım 2026 · Codex.** Raporu, düzenlenebilir sunumu, kurulum/veri erişimi ve yeniden çalıştırma belgelerini hazırladı. Beyan edilen araç ve katkıları AI_USAGE.md dosyasına ekledi. Herkese açık GitHub oluşturma için otomatik onay engelini kaydetti.
+- **11 Kasım 2026 · Codex.** Kullanıcının açık onayıyla herkese açık GitHub deposunu oluşturdu ve dosyaları GitHub Desktop ile gönderdi. Rapordaki ve sunumdaki bekleyen yayımlama notlarını kaldırdı.
