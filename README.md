@@ -77,7 +77,7 @@ Kaydedilmiş JSON ve CSV dosyaları Git'te bulunur. Son iki komut veri indirmede
 
 [configs/ave_improvement.json](configs/ave_improvement.json), doğrulamadan önce kaydedilen 2 saniye yarıçap, 0,5 komşu ağırlığı, 2–7 puanlama indisleri, 16 klip doğruluk grubu ve tek klip gecikme protokolünü içerir. Özgün model ağırlıkları sabittir. Testte yöntem ayarı değiştirilmedi. Yapılandırma SHA-256 değeri `5adb3bbca7243ed4d56d9ab1488811b69b522e6bb8b12246a24f08a568d8b846`.
 
-Yerel teslim adayı `submission-v1-rc1` etiketiyle tanımlanır. Herkese açık yayımlama onayı sonrasında kullanılacak nihai etiket `submission-v1` olacaktır. Depo geçmişi, 9-10 Kasım deneylerini 11 Kasım'da paketleyen ilk kaydı içerir. Deneyler sırasında ayrı commit'ler oluşturulmadı. Tarihsel Git geçmişi sonradan üretilmedi. Aşamalar ve zamanında kaydedilmiş sonuçlar [araştırma planında](ARASTIRMA-PLANI.md) bulunur.
+Nihai teslim sürümü `submission-v1`, önceki yerel teslim adayı `submission-v1-rc1` etiketiyle tanımlanır. Depo geçmişi, 9-10 Kasım deneylerini 11 Kasım'da paketleyen kayıtları içerir. Deneyler sırasında ayrı commit'ler oluşturulmadı. Tarihsel Git geçmişi sonradan üretilmedi. Aşamalar ve zamanında kaydedilmiş sonuçlar [araştırma planında](ARASTIRMA-PLANI.md) bulunur.
 
 ## Kaynak ve yapay zekâ beyanı
 

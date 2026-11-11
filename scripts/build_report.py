@@ -304,7 +304,7 @@ Açık sorular, alt saniyelik veya değişken gecikme, doğal uyumsuzluk, farkl�
             text += f' <link href="{escape(url)}" color="#087b68">Kaynak bağlantısı</link>'
         story.append(p(text, "small"))
     story.append(p("Çalıştırılabilir kayıt", "h2"))
-    prose("""Kod, yapılandırma, JSON/CSV çıktıları, komutlar ve yapay zekâ beyanı teslim deposunda yer alır. Yerel teslim adayı submission-v1-rc1, yayımlanacak sürüm submission-v1 etiketiyle tanımlanır. Kod ve deneyler için README.md içindeki sıralı komutlar, tablolar için scripts/export_tables.py ve grafik için scripts/plot_ave_test.py kullanılır.
+    prose("""Kod, yapılandırma, JSON/CSV çıktıları, komutlar ve yapay zekâ beyanı teslim deposunda yer alır. Nihai teslim submission-v1, önceki yerel aday submission-v1-rc1 etiketiyle tanımlanır. Kod ve deneyler için README.md içindeki sıralı komutlar, tablolar için scripts/export_tables.py ve grafik için scripts/plot_ave_test.py kullanılır.
 
 9-10 Kasım deneyleri 11 Kasım'da teslim için paketlendi. Deneyler sırasında ayrı commit'ler oluşturulmadı. Araştırma planı aşama kayıtlarını korur. Yazar kodu, ders PDF'leri ve veri/özellik dosyaları depoda yeniden dağıtılmaz.""")
     story.append(p("Yapılandırma SHA-256", "h2"))
