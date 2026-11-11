@@ -1,0 +1,4 @@
+method,calls,median_ms_per_clip,p95_ms_per_clip
+reference,160,0.6964794999999999,0.7567625
+local_average,160,0.7167705,0.7870336499999999
+norm_matched,160,0.7226455,0.7949326999999999

@@ -1,0 +1,91 @@
+{
+  "model": "A+V-att",
+  "split": "official AVE validation",
+  "purpose": "protocol validation",
+  "clips": 402,
+  "input_segments_per_clip": 10,
+  "scored_second_indices": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "scored_segments_per_condition": 2412,
+  "positive_offset": "delay audio: input audio at t comes from t - offset",
+  "boundary_handling": "zero pad without wraparound; zero the same positions in the unshifted control",
+  "conditions": [
+    {
+      "offset_seconds": -2,
+      "masked_second_indices": [
+        8,
+        9
+      ],
+      "shifted_correct_segments": 1719,
+      "control_correct_segments": 1760,
+      "shifted_accuracy_percent": 71.26865671641791,
+      "control_accuracy_percent": 72.96849087893864,
+      "control_minus_shifted_percentage_points": 1.6998341625207296
+    },
+    {
+      "offset_seconds": -1,
+      "masked_second_indices": [
+        9
+      ],
+      "shifted_correct_segments": 1756,
+      "control_correct_segments": 1755,
+      "shifted_accuracy_percent": 72.80265339966833,
+      "control_accuracy_percent": 72.76119402985074,
+      "control_minus_shifted_percentage_points": -0.04145936981757877
+    },
+    {
+      "offset_seconds": 0,
+      "masked_second_indices": [],
+      "shifted_correct_segments": 1771,
+      "control_correct_segments": 1771,
+      "shifted_accuracy_percent": 73.424543946932,
+      "control_accuracy_percent": 73.424543946932,
+      "control_minus_shifted_percentage_points": 0.0
+    },
+    {
+      "offset_seconds": 1,
+      "masked_second_indices": [
+        0
+      ],
+      "shifted_correct_segments": 1766,
+      "control_correct_segments": 1777,
+      "shifted_accuracy_percent": 73.21724709784411,
+      "control_accuracy_percent": 73.67330016583747,
+      "control_minus_shifted_percentage_points": 0.4560530679933665
+    },
+    {
+      "offset_seconds": 2,
+      "masked_second_indices": [
+        0,
+        1
+      ],
+      "shifted_correct_segments": 1733,
+      "control_correct_segments": 1769,
+      "shifted_accuracy_percent": 71.84908789386401,
+      "control_accuracy_percent": 73.34162520729684,
+      "control_minus_shifted_percentage_points": 1.492537313432836
+    }
+  ],
+  "d1_mean_drop_percentage_points": 0.20729684908789386,
+  "d2_mean_drop_percentage_points": 1.5961857379767828,
+  "upstream_revision": "93f843fed72fb17394df76330df958b0c2dbde76",
+  "checkpoint_sha256": "35a1dc17abf03652e686ae354424539e6fdf5ee463b6f27c91d7e0b35ab3865c",
+  "model_source_sha256": "6a0763a4c8fbd6612ce5053159e18071bccef05d31c45557cd9f53e5a0b3f718",
+  "audio_origin": "LECOO/AVE mirror",
+  "audio_sha256": "6765e445a5a66853282964576222c7aaf895b563100b2d99f29ecfd413c7d8fc",
+  "visual_sha256_in_validation_order": "622bd057639fe1b5c9c457af838b57909e6e2be2701de478285ba57117677dc5",
+  "validation_order_sha256": "5692aec0efb30e4efa49a867a902c1993b4c88a7d3ec19879349e540e7a5d9ca",
+  "labels_sha256": "998d314a6bb37f00c0a0d89fe5e63c409b50c32d669d20507249611d6671fdd8",
+  "device": "cpu",
+  "batch_size": 16,
+  "pytorch": "2.15.0",
+  "python": "3.12.14",
+  "h5py": "3.16.0",
+  "numpy": "2.5.4"
+}

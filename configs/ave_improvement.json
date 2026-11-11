@@ -1,0 +1,12 @@
+{
+  "protocol": "ave-audio-context-v1",
+  "radius_seconds": 2,
+  "neighbor_weight": 0.5,
+  "offsets_seconds": [-2, -1, 0, 1, 2],
+  "scored_second_indices": [2, 3, 4, 5, 6, 7],
+  "primary_offsets_seconds": [-2, 2],
+  "accuracy_batch_size": 16,
+  "cpu_threads": 4,
+  "bootstrap": {"unit": "source_video_id", "replicates": 10000, "seed": 2026, "confidence_level": 0.95},
+  "latency": {"batch_size": 1, "first_clips_per_offset": 32, "warmup_calls_per_method": 5}
+}

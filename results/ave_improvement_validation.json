@@ -1,0 +1,304 @@
+{
+  "split": "official AVE validation",
+  "model": "A+V-att",
+  "settings": {
+    "protocol": "ave-audio-context-v1",
+    "radius_seconds": 2,
+    "neighbor_weight": 0.5,
+    "offsets_seconds": [
+      -2,
+      -1,
+      0,
+      1,
+      2
+    ],
+    "scored_second_indices": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "primary_offsets_seconds": [
+      -2,
+      2
+    ],
+    "accuracy_batch_size": 16,
+    "cpu_threads": 4,
+    "bootstrap": {
+      "unit": "source_video_id",
+      "replicates": 10000,
+      "seed": 2026,
+      "confidence_level": 0.95
+    },
+    "latency": {
+      "batch_size": 1,
+      "first_clips_per_offset": 32,
+      "warmup_calls_per_method": 5
+    }
+  },
+  "config_sha256": "5adb3bbca7243ed4d56d9ab1488811b69b522e6bb8b12246a24f08a568d8b846",
+  "script_sha256": "cbbdb7b53ac74fbd22bec1727a67c0e2554026b92166322a1951ae49902c39e4",
+  "clips": 402,
+  "scored_segments_per_condition": 2412,
+  "conditions": [
+    {
+      "offset_seconds": -2,
+      "masked_second_indices": [
+        8,
+        9
+      ],
+      "methods": {
+        "reference": {
+          "correct_segments": {
+            "shifted": 1719,
+            "aligned": 1760
+          },
+          "accuracy_percent": {
+            "shifted": 71.26865671641791,
+            "aligned": 72.96849087893864
+          },
+          "aligned_minus_shifted_pp": 1.6998341625207296
+        },
+        "local_average": {
+          "correct_segments": {
+            "shifted": 1733,
+            "aligned": 1761
+          },
+          "accuracy_percent": {
+            "shifted": 71.84908789386401,
+            "aligned": 73.00995024875621
+          },
+          "aligned_minus_shifted_pp": 1.1608623548922057
+        },
+        "norm_matched": {
+          "correct_segments": {
+            "shifted": 1715,
+            "aligned": 1755
+          },
+          "accuracy_percent": {
+            "shifted": 71.1028192371476,
+            "aligned": 72.76119402985074
+          },
+          "aligned_minus_shifted_pp": 1.658374792703151
+        }
+      }
+    },
+    {
+      "offset_seconds": -1,
+      "masked_second_indices": [
+        9
+      ],
+      "methods": {
+        "reference": {
+          "correct_segments": {
+            "shifted": 1756,
+            "aligned": 1755
+          },
+          "accuracy_percent": {
+            "shifted": 72.80265339966833,
+            "aligned": 72.76119402985074
+          },
+          "aligned_minus_shifted_pp": -0.04145936981757877
+        },
+        "local_average": {
+          "correct_segments": {
+            "shifted": 1760,
+            "aligned": 1767
+          },
+          "accuracy_percent": {
+            "shifted": 72.96849087893864,
+            "aligned": 73.2587064676617
+          },
+          "aligned_minus_shifted_pp": 0.2902155887230514
+        },
+        "norm_matched": {
+          "correct_segments": {
+            "shifted": 1756,
+            "aligned": 1757
+          },
+          "accuracy_percent": {
+            "shifted": 72.80265339966833,
+            "aligned": 72.8441127694859
+          },
+          "aligned_minus_shifted_pp": 0.04145936981757877
+        }
+      }
+    },
+    {
+      "offset_seconds": 0,
+      "masked_second_indices": [],
+      "methods": {
+        "reference": {
+          "correct_segments": {
+            "shifted": 1771,
+            "aligned": 1771
+          },
+          "accuracy_percent": {
+            "shifted": 73.424543946932,
+            "aligned": 73.424543946932
+          },
+          "aligned_minus_shifted_pp": 0.0
+        },
+        "local_average": {
+          "correct_segments": {
+            "shifted": 1769,
+            "aligned": 1769
+          },
+          "accuracy_percent": {
+            "shifted": 73.34162520729684,
+            "aligned": 73.34162520729684
+          },
+          "aligned_minus_shifted_pp": 0.0
+        },
+        "norm_matched": {
+          "correct_segments": {
+            "shifted": 1767,
+            "aligned": 1767
+          },
+          "accuracy_percent": {
+            "shifted": 73.2587064676617,
+            "aligned": 73.2587064676617
+          },
+          "aligned_minus_shifted_pp": 0.0
+        }
+      }
+    },
+    {
+      "offset_seconds": 1,
+      "masked_second_indices": [
+        0
+      ],
+      "methods": {
+        "reference": {
+          "correct_segments": {
+            "shifted": 1766,
+            "aligned": 1777
+          },
+          "accuracy_percent": {
+            "shifted": 73.21724709784411,
+            "aligned": 73.67330016583747
+          },
+          "aligned_minus_shifted_pp": 0.4560530679933665
+        },
+        "local_average": {
+          "correct_segments": {
+            "shifted": 1771,
+            "aligned": 1774
+          },
+          "accuracy_percent": {
+            "shifted": 73.424543946932,
+            "aligned": 73.54892205638474
+          },
+          "aligned_minus_shifted_pp": 0.12437810945273632
+        },
+        "norm_matched": {
+          "correct_segments": {
+            "shifted": 1763,
+            "aligned": 1779
+          },
+          "accuracy_percent": {
+            "shifted": 73.09286898839137,
+            "aligned": 73.75621890547264
+          },
+          "aligned_minus_shifted_pp": 0.6633499170812603
+        }
+      }
+    },
+    {
+      "offset_seconds": 2,
+      "masked_second_indices": [
+        0,
+        1
+      ],
+      "methods": {
+        "reference": {
+          "correct_segments": {
+            "shifted": 1733,
+            "aligned": 1769
+          },
+          "accuracy_percent": {
+            "shifted": 71.84908789386401,
+            "aligned": 73.34162520729684
+          },
+          "aligned_minus_shifted_pp": 1.492537313432836
+        },
+        "local_average": {
+          "correct_segments": {
+            "shifted": 1748,
+            "aligned": 1772
+          },
+          "accuracy_percent": {
+            "shifted": 72.4709784411277,
+            "aligned": 73.46600331674959
+          },
+          "aligned_minus_shifted_pp": 0.9950248756218906
+        },
+        "norm_matched": {
+          "correct_segments": {
+            "shifted": 1723,
+            "aligned": 1768
+          },
+          "accuracy_percent": {
+            "shifted": 71.43449419568823,
+            "aligned": 73.30016583747927
+          },
+          "aligned_minus_shifted_pp": 1.8656716417910448
+        }
+      }
+    }
+  ],
+  "contrasts": {
+    "two_second_shift_means": {
+      "reference": {
+        "shifted_accuracy_percent": 71.55887230514097,
+        "d2_pp": 1.5961857379767828
+      },
+      "local_average": {
+        "shifted_accuracy_percent": 72.16003316749585,
+        "d2_pp": 1.077943615257048
+      },
+      "norm_matched": {
+        "shifted_accuracy_percent": 71.26865671641792,
+        "d2_pp": 1.7620232172470978
+      }
+    },
+    "local_average_minus_reference_pp": 0.6011608623548881,
+    "local_average_minus_norm_matched_pp": 0.8913764510779316
+  },
+  "latency": {
+    "unit": "ms per clip",
+    "conditions": "shifted inputs at all five offsets",
+    "methods": {
+      "reference": {
+        "samples": 160,
+        "median_ms": 0.6918335,
+        "p95_ms": 0.7355809499999999
+      },
+      "local_average": {
+        "samples": 160,
+        "median_ms": 0.7108540000000001,
+        "p95_ms": 0.76253815
+      },
+      "norm_matched": {
+        "samples": 160,
+        "median_ms": 0.7141455,
+        "p95_ms": 0.7779066
+      }
+    }
+  },
+  "audio_origin": "LECOO/AVE mirror",
+  "audio_sha256": "6765e445a5a66853282964576222c7aaf895b563100b2d99f29ecfd413c7d8fc",
+  "checkpoint_sha256": "35a1dc17abf03652e686ae354424539e6fdf5ee463b6f27c91d7e0b35ab3865c",
+  "model_source_sha256": "6a0763a4c8fbd6612ce5053159e18071bccef05d31c45557cd9f53e5a0b3f718",
+  "visual_sha256_in_validation_order": "622bd057639fe1b5c9c457af838b57909e6e2be2701de478285ba57117677dc5",
+  "validation_order_sha256": "5692aec0efb30e4efa49a867a902c1993b4c88a7d3ec19879349e540e7a5d9ca",
+  "labels_sha256": "998d314a6bb37f00c0a0d89fe5e63c409b50c32d669d20507249611d6671fdd8",
+  "device": "cpu",
+  "machine": "arm64",
+  "python": "3.12.14",
+  "pytorch": "2.15.0",
+  "h5py": "3.16.0",
+  "numpy": "2.5.4"
+}

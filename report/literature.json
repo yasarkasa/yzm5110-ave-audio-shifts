@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Tian vd. 2018\nAVEL",
+    "title": "Audio-Visual Event Localization in Unconstrained Videos",
+    "url": "https://arxiv.org/abs/1803.08842",
+    "question": "Hem duyulan hem görülen olayın sınıfı ve zamanı bulunabilir mi? AVE görevlerini, veri kümesini ve ses yönlendirmeli görsel dikkati sunar.",
+    "modalities": "Ses ve RGB video. Tam denetimde bölüm, zayıf denetimde klip etiketleri. Hazır VGG-19 ve AudioSet ses özellikleri. Çıkarımda iki kip birlikte verilir.",
+    "mechanism": "A+V-att, sesle görsel bölgeleri ağırlıklandırır ve iki BiLSTM çıktısını birleştirir. Makale çapraz entropi tarif eder. İncelenen eğitim betiği MultiLabelSoftMarginLoss kullanır.",
+    "data": "AVE, 4.143 klip ve 28 olay sınıfı. Özgün bölüm sayıları 3.339/402/402. On adet bir saniyelik bölüm ve arka plan sınıfı.",
+    "evidence": "Tablo 1 A+V-att T/Z %72,7/%66,7. Yalnız ses %59,5, yalnız görüntü %55,3, dikkatsiz A+V %71,4. DMRN ayrı füzyon modeli.",
+    "resources": "Kod, ağırlıklar ve hazır özellikler mevcut. Python 3.6/PyTorch 0.3.0. Bu proje yayımlanmış ağırlıkları sabit revizyonda CPU'ya uyarlar.",
+    "limits": "A+V-att referans hedefidir. Özgün etiketleri koruyan kontrollü kayma, saat kayması altında olay geri kazanımını sınar. Yeniden eğitim sonuçları bu projede üretilmedi."
+  },
+  {
+    "name": "Xuan vd. 2020\nCMAN",
+    "title": "Cross-Modal Attention Network for Temporal Inconsistent Audio-Visual Event Localization",
+    "url": "https://ojs.aaai.org/index.php/AAAI/article/view/5361",
+    "question": "Zamansal uyumsuzlukta konum, zaman ve kip seçimi nasıl yapılır? Uzamsal dikkat, self-attention ve uyarlamalı co-attention ile kanıt seçer.",
+    "modalities": "Ses ve RGB. T/Z eğitim. Ses ile görüntüdeki olay ilişkileri farklı saniyelere yayılabilir. Makale görsel kodlayıcıyı ResNet-151 olarak bildirir.",
+    "mechanism": "LSTM sentinel kapısı, kendi kipindeki bellek ile karşı kipten gelen bağlamı ağırlıklandırır. Üç dikkat düzeyi ortak konumlandırma amacına bağlanır.",
+    "data": "AVE, %80/%10/%10 bölme. Her saniyede 16 RGB kare. VGG benzeri ses ve makalede bildirilen ResNet görsel özellikleri.",
+    "evidence": "Tablo 1 T/Z %77,1/%75,7. Dikkat modülleri kapalı %71,4/%69,0. Sentinel çıkarılınca Tablo 2 %76,1/%74,9.",
+    "resources": "Mimari ve ön işleme açıklanır. Resmî kod, yayımlanmış checkpoint ve donanım ayrıntıları ilk taramada doğrulanamadı.",
+    "limits": "Doğal uyumsuzluğu inceler. Ana tablolar sabit ofset büyüklüğüne ayrılmamıştır. Kapı ablasyonu kip seçim etkisi için örnek sağlar."
+  },
+  {
+    "name": "Zhou vd. 2021\nPSP",
+    "title": "Positive Sample Propagation Along the Audio-Visual Event Line",
+    "url": "https://arxiv.org/abs/2104.00239",
+    "question": "Aynı olayın farklı saniyelerdeki yararlı ses-görüntü çiftlerinden bilgi taşınabilir mi? Güçlü pozitif bağlantılar üzerinden özellik yayar.",
+    "modalities": "Ses ve RGB, T/Z eğitim. İlişkili çiftlerin aynı zaman indisinde olması gerekmez. VGG-19 ve VGG benzeri ses özellikleri kullanılır.",
+    "mechanism": "BiLSTM sonrasında bütün ses-görüntü çiftlerinin benzerliği hesaplanır. Zayıf bağlantılar elenir. Tam denetimde sınıflandırmaya çift benzerliği kaybı eklenir.",
+    "data": "AVE bölüm doğruluğu. Depoda HDF5 bölüm listeleri ve etiketler bulunur. Aynı veri kümesi, bütün çalışmaların birebir aynı protokolü kullandığını garanti etmez.",
+    "evidence": "Tablo 1 T/Z %77,8/%73,5. PSP çıkarıldığında %73,7/%70,2. Bütün bağlantıları tutan varyant tam denetimde %75,9.",
+    "resources": "PyTorch kodu, özellik ve checkpoint bağlantıları var. README tam denetim eşiği 0,099. Makale Tablo 3'teki en iyi eşik 0,095.",
+    "limits": "Zamanlar arası pozitif çift seçimi projenin motivasyonuna yakın. Eşik ve çift kaybının kontrollü kayma altındaki etkisi ayrıca sınanmalıdır."
+  },
+  {
+    "name": "Xia ve Zhao 2022\nCMBS",
+    "title": "Cross-Modal Background Suppression for Audio-Visual Event Localization",
+    "url": "https://openaccess.thecvf.com/content/CVPR2022/papers/Xia_Cross-Modal_Background_Suppression_for_Audio-Visual_Event_Localization_CVPR_2022_paper.pdf",
+    "question": "Karşı kipteki ilgisiz zaman ve olay kanıtı bastırılınca konumlandırma iyileşir mi? Zaman ve olay düzeyinde arka plan bastırır.",
+    "modalities": "Ses ve RGB, T/Z eğitim. Tek kipteki olay ortak ses-görüntü olayı açısından arka plan olabilir. VGG-19 ve Res-151 görsel seçenekleri ayrılır.",
+    "mechanism": "Karşı kipten zaman kapısı ve olay skoru üretir. Olay sınıflandırması ve kapı gözetimi, ilgisiz karşı kip kanıtını bastırır.",
+    "data": "AVE bölüm doğruluğu. Ses özellikleri sabit. Görsel kodlayıcı karşılaştırmalarında VGG-19 ve Res-151 ayrı raporlanır.",
+    "evidence": "VGG-19 T/Z %79,3/%74,2. Zaman bastırması çıkarılınca %77,93/%73,45. Olay bastırması çıkarılınca %78,30/%73,57.",
+    "resources": "Kod, yapılandırma, özellik ve checkpoint bağlantıları mevcut. Depo Python 3.7.6, PyTorch 1.10.2, CUDA 11.4 bildirir.",
+    "limits": "Arka plan bastırma ile saat kaymasını telafi etme farklı mekanizmalardır. Gecikmiş ama ilgili sesin bastırılması olası hata olarak incelenebilir."
+  },
+  {
+    "name": "Liu vd. 2025\nAVSGN",
+    "title": "Audio-Visual Semantic Graph Network for Audio-Visual Event Localization",
+    "url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Liu_Audio-Visual_Semantic_Graph_Network_for_Audio-Visual_Event_Localization_CVPR_2025_paper.pdf",
+    "question": "Sınıf metinleriyle ortak anlam ve zamanlar arası etkileşim kurulabilir mi? Üç kipin alt graflarıyla anlamsal ilişkiler taşır.",
+    "modalities": "Ses, RGB ve bilinen sınıf metinleri. Metin klibe özgü transkript değildir. CLIP Swin-V2-L ve CLAP HTS-AT özellikleri kullanılır.",
+    "mechanism": "CMSA ile ortak uzay ve CMGI ile ses-görüntü, ses-metin, görüntü-metin alt grafları. Sınıflandırma, olay ilgisi, kapı ve anlamsal tutarlılık kayıpları.",
+    "data": "AVE T/Z bölüm doğruluğu. CLIP ve CLAP ile 512 boyutlu özellikler. Tian'ın VGG tabanlı kodlayıcılarından farklıdır.",
+    "evidence": "Tablo 1 T/Z %83,1/%78,8. Ses-görüntü alt grafı çıkarılınca %80,3/%75,9. Üç alt graf çıkarılınca %79,6/%74,8.",
+    "resources": "PyTorch, RTX 2080 Ti, 200 epoch ve Adam ayrıntıları verilir. Resmî kod ve modele özgü checkpoint ilk taramada doğrulanamadı.",
+    "limits": "Yayınlar arası skor farkı kodlayıcı değişimini de içerir. Grafın katkısını aynı sistemin alt graf ablasyonuyla değerlendirmek daha yakındır."
+  }
+]
