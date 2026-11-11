@@ -13,8 +13,8 @@ import numpy as np
 
 RESULTS = Path(__file__).resolve().parents[1] / "results"
 COLORS = {"reference": "#375886", "local_average": "#087b68", "norm_matched": "#ad5d24"}
-LABELS = {"reference": "A+V-att referansı", "local_average": "Yerel ses ortalaması",
-          "norm_matched": "Norm eşlemeli ablasyon"}
+LABELS = {"reference": "A+V-att baseline", "local_average": "Local audio averaging",
+          "norm_matched": "Norm-matched ablation"}
 
 
 def plot_intervals(ax, offsets, estimates, bounds, *, method, label, nudge, marker):
@@ -35,9 +35,9 @@ def main():
     fig, (accuracy, gain) = plt.subplots(2, 1, figsize=(9.1, 7.2), sharex=True,
                                          gridspec_kw={"height_ratios": [1.1, 1]})
     fig.subplots_adjust(left=0.145, right=0.955, top=0.79, bottom=0.15, hspace=0.55)
-    fig.text(0.145, 0.945, "AVE testinde ses kaymasının etkisi", fontsize=20, fontweight="bold")
-    segments = f"{report['scored_segments_per_condition']:,}".replace(",", ".")
-    fig.text(0.145, 0.905, f"{report['clips']} klip · Koşul başına {segments} bölüm · %95 güven aralığı",
+    fig.text(0.145, 0.945, "Audio shifts on the AVE test set", fontsize=20, fontweight="bold")
+    segments = f"{report['scored_segments_per_condition']:,}"
+    fig.text(0.145, 0.905, f"{report['clips']} clips · {segments} segments per condition · 95% confidence intervals",
              color="#47566b")
 
     for (method, label), nudge, marker in zip(LABELS.items(), (-0.085, 0, 0.085), ("o", "s", "D")):
@@ -45,20 +45,20 @@ def main():
         plot_intervals(accuracy, offsets, [s["accuracy_percent"]["shifted"] for s in stats],
                        [s["accuracy_ci95_percent"]["shifted"] for s in stats],
                        method=method, label=label, nudge=nudge, marker=marker)
-    accuracy.set_ylabel("Bölüm doğruluğu (%)")
-    accuracy.set_title("A   Kaydırılmış sesle doğruluk", loc="left", fontweight="bold", pad=14)
+    accuracy.set_ylabel("Segment accuracy (%)")
+    accuracy.set_title("A   Accuracy with shifted audio", loc="left", fontweight="bold", pad=14)
     accuracy.legend(loc="upper left", bbox_to_anchor=(0, 1.43), ncol=3, frameon=False,
                     borderaxespad=0, handletextpad=0.45, columnspacing=1.6, fontsize=9.5)
 
     gain.axhline(0, color="#64748b", linestyle="--", linewidth=1)
-    for method, label, nudge, marker in (("reference", "Referansa göre", -0.055, "o"),
-                                         ("norm_matched", "Ablasyona göre", 0.055, "D")):
+    for method, label, nudge, marker in (("reference", "Versus baseline", -0.055, "o"),
+                                         ("norm_matched", "Versus ablation", 0.055, "D")):
         stats = [condition["local_average_gain_pp"][method] for condition in data]
         plot_intervals(gain, offsets, [s["estimate"] for s in stats], [s["ci95"] for s in stats],
                        method=method, label=label, nudge=nudge, marker=marker)
-    gain.set_title("B   Yerel ortalamanın doğruluk farkı", loc="left", fontweight="bold", pad=10)
-    gain.set_ylabel("Fark (yüzde puanı)")
-    gain.set_xlabel("Ses kayması (saniye)", labelpad=7)
+    gain.set_title("B   Accuracy gain from local averaging", loc="left", fontweight="bold", pad=10)
+    gain.set_ylabel("Difference (percentage points)")
+    gain.set_xlabel("Audio shift (seconds)", labelpad=7)
     gain.legend(loc="lower right", frameon=True, facecolor="white", edgecolor="none", fontsize=9.5)
 
     for ax in (accuracy, gain):
@@ -71,9 +71,9 @@ def main():
         ax.tick_params(axis="y", length=0, pad=6)
         ax.tick_params(axis="x", length=0, pad=5)
         ax.yaxis.set_major_locator(MaxNLocator(nbins=5))
-        ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}".replace("-", "−").replace(".", ",")))
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda x, _: f"{x:g}".replace("-", "−")))
 
-    fig.text(0.145, 0.038, "Aralıklar kaynak video düzeyinde 10.000 eşlenmiş bootstrap örneğinden hesaplandı.",
+    fig.text(0.145, 0.038, "Intervals use 10,000 paired bootstrap samples at the source-video level.",
              color="#47566b", fontsize=9)
     for extension in ("png", "svg"):
         fig.savefig(RESULTS / f"ave_test_accuracy.{extension}", dpi=220, facecolor="white")

@@ -1,23 +1,23 @@
-# Kaynaklar ve yeniden kullanılan bileşenler
+# Attribution and reused components
 
-## A+V-att uygulaması
+## A+V-att implementation
 
-Yapeng Tian ve diğerlerinin [AVE-ECCV18 deposu](https://github.com/YapengTian/AVE-ECCV18), `93f843fed72fb17394df76330df958b0c2dbde76` revizyonu kullanıldı. `AV_att.pt`, `models.py`, özgün bölüm listeleri ve etiketler çalışma sırasında bu depodan alınır. Dosyalar bu depoda yeniden dağıtılmaz. İncelenen revizyonda ayrı bir LICENSE dosyası bulunamadı. Kullanıcılar özgün kod, model ve verinin kullanım koşullarını kaynak sahiplerinden doğrulamalıdır.
+The project uses Yapeng Tian et al.'s [AVE-ECCV18 repository](https://github.com/YapengTian/AVE-ECCV18) at revision 93f843fed72fb17394df76330df958b0c2dbde76. The AV_att.pt checkpoint, models.py, original split lists and labels are obtained from that checkout. These upstream assets are not redistributed here. No separate LICENSE file was found in the inspected revision. Users should verify the original code, model and data terms with the source owners.
 
-`scripts/ave_smoke.py`, kaydedilmiş ağırlıkları hash ve izin verilen nesne sınıflarıyla kontrol ederek yükler. Özgün `models.py` bellekte çalıştırılırken dört CUDA sıfır durumu girdi cihazına taşınır ve eski Xavier başlatıcısı güncel adına çevrilir. Model parametreleri değişmez. Özgün eğitim betiğindeki kayıp ile makaledeki açıklama farkı, bu projenin checkpoint çıkarımını etkilemez. Yeniden eğitim yapılmadı.
+The loader in scripts/ave_smoke.py checks file hashes and restricts accepted legacy object classes. When the pinned models.py is executed in memory, four CUDA-specific zero states are made device-aware and the old Xavier initializer name is updated. All learned parameters are loaded from the published checkpoint. The training-loss discrepancy between the paper and upstream training script is recorded. This project evaluates checkpoint inference.
 
-Atıf, Tian, Y., Shi, J., Li, B., Duan, Z. ve Xu, C. (2018). *Audio-Visual Event Localization in Unconstrained Videos*. ECCV. [Makale](https://arxiv.org/abs/1803.08842).
+Citation, Tian, Y., Shi, J., Li, B., Duan, Z. and Xu, C. (2018). *Audio-Visual Event Localization in Unconstrained Videos*. ECCV. [Paper](https://arxiv.org/abs/1803.08842).
 
-## AVE özellikleri
+## AVE features
 
-Görüntü özellikleri özgün yazar bağlantısındaki HDF5 dosyasından HTTP bayt aralıklarıyla alınır. Ses için Google Drive kota sorunu nedeniyle [LECOO/AVE aynası](https://huggingface.co/datasets/LECOO/AVE/tree/main) kullanıldı. Aynanın tam dosya SHA-256 değeri `6765e445a5a66853282964576222c7aaf895b563100b2d99f29ecfd413c7d8fc`. Bu özet kullanılan sürümü tanımlar. Özgün ses dosyasıyla tam dosya özeti karşılaştırması henüz yapılamadı.
+Visual features are read from the authors' HDF5 link through HTTP byte ranges. Audio uses the [LECOO/AVE mirror](https://huggingface.co/datasets/LECOO/AVE/tree/main) because the official Google Drive link returned a quota error. The mirror's SHA-256 is 6765e445a5a66853282964576222c7aaf895b563100b2d99f29ecfd413c7d8fc. This identifies the audio version used. Full-file identity with the official audio asset remains unverified.
 
-Veri, ham videolar, özellikler ve büyük checkpoint'ler Git'e eklenmez. Kaynak bağlantısının herkese açık olması yeniden dağıtım izni anlamına gelmez. Erişim ve kullanımda yazarların ve veri sağlayıcının koşulları geçerlidir. Bu projedeki hazırlama komutu, okuyucunun bu erişim koşullarını kendi kullanımı için değerlendirdiğini varsayar.
+Raw videos, feature files and large checkpoints are excluded from Git. Public availability of a download link does not establish redistribution rights. Access and use are subject to the authors' and providers' conditions. The preparation command assumes the reader has assessed those conditions for their intended use.
 
-## Ders materyalleri
+## Course materials
 
-Ekrem Çetinkaya'nın YZM5110 ders slaytları ve ödev PDF'si yerel `kaynaklar/` klasöründe incelendi. Bu PDF'ler herkese açık depoya yüklenmez. Hafta 4'ün zamansal hizalama ve Hafta 5'in kaynak bazında bölme konuları deney tasarımına bağlandı. Öğrenciye özgü kod, çıktı, rapor ve sunum ders yönergesinin bireysel çalışma koşuluna tabidir.
+Ekrem Cetinkaya's YZM5110 slides and project instructions were reviewed in the local kaynaklar/ directory. Course PDFs are excluded from the public repository. Week 4 temporal alignment and Week 5 source-family splits informed the experiment. Project-specific code, outputs, reports and slides remain subject to the individual-work policy.
 
-## Yazılım
+## Software
 
-Çıkarımda Python 3.12.14, NumPy 2.5.4, h5py 3.16.0 ve PyTorch 2.15.0 kullanıldı. Grafikler Matplotlib 3.10.8, rapor ReportLab, düzenlenebilir sunum OpenAI Artifact Tool ile üretildi. Yazılımlar kendi lisanslarına tabidir. Yapay zekâ katkıları [AI_USAGE.md](AI_USAGE.md) dosyasında açıklanır.
+Inference used Python 3.12.14, NumPy 2.5.4, h5py 3.16.0 and PyTorch 2.15.0. Figures use Matplotlib 3.10.8, the report uses ReportLab and the editable presentation was authored with OpenAI Artifact Tool. Each software package retains its own license. AI contributions are disclosed in [AI_USAGE.md](AI_USAGE.md).

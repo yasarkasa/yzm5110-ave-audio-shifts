@@ -45,7 +45,7 @@ def p(text, style="body"):
 
 
 def number(value, precision=2):
-    return f"{value:.{precision}f}".replace(".", ",").replace("-0,00", "0,00")
+    return f"{value:.{precision}f}".replace("-0.00", "0.00")
 
 
 def measured(value):
@@ -73,8 +73,8 @@ def footer(canvas, doc):
     canvas.saveState()
     canvas.setFont("Body", 7.4)
     canvas.setFillColor(MUTED)
-    canvas.drawString(46, height - 28, "Eren Kahraman  |  YZM5110  |  AVE ve ses kayması")
-    canvas.drawString(46, 25, "Araştırma projesi  |  11 Kasım 2026")
+    canvas.drawString(46, height - 28, "Eren Kahraman  |  YZM5110  |  Audio shifts on AVE")
+    canvas.drawString(46, 25, "Research project  |  11 November 2026")
     canvas.drawRightString(width - 46, 25, str(doc.page))
     canvas.restoreState()
 
@@ -82,18 +82,19 @@ def footer(canvas, doc):
 def build(repo_url, published):
     test = json.loads((RESULTS / "ave_test.json").read_text())
     ref = json.loads((RESULTS / "ave_reference.json").read_text())
-    validation = json.loads((RESULTS / "ave_improvement_validation.json").read_text())
     lit = json.loads((ROOT / "report/literature.json").read_text())
     methods = ("reference", "local_average", "norm_matched")
-    labels = {"reference": "A+V-att", "local_average": "Yerel ortalama", "norm_matched": "Norm eşlemeli"}
+    labels = {"reference": "A+V-att", "local_average": "Local averaging", "norm_matched": "Norm-matched"}
     destination = ROOT / "output/pdf/Kahraman_YZM5110_Research.pdf"
     destination.parent.mkdir(parents=True, exist_ok=True)
-    doc = BaseDocTemplate(str(destination), pagesize=A4, title="AVE üzerinde ses ve görüntü arasındaki zaman kaymasının etkisi",
-                          author="Eren Kahraman", leftMargin=46, rightMargin=46, topMargin=49, bottomMargin=44)
+    title = "Audio Visual Event Localization under Temporal Audio Shifts on AVE"
+    doc = BaseDocTemplate(str(destination), pagesize=A4, title=title, author="Eren Kahraman",
+                          leftMargin=46, rightMargin=46, topMargin=49, bottomMargin=44)
     templates = []
     for name, size in (("portrait", A4), ("landscape", landscape(A4))):
         width, height = size
-        frame = Frame(46, 44, width - 92, height - 96, leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
+        frame = Frame(46, 44, width - 92, height - 96, leftPadding=0, rightPadding=0,
+                      topPadding=0, bottomPadding=0)
         templates.append(PageTemplate(id=name, frames=[frame], pagesize=size, onPage=footer))
     doc.addPageTemplates(templates)
     story = []
@@ -102,212 +103,215 @@ def build(repo_url, published):
         for paragraph in text.strip().split("\n\n"):
             story.append(p(paragraph.replace("\n", " ")))
 
-    def page(title):
+    def page(heading):
         if story:
             story.append(PageBreak())
-        story.append(p(title, "h1"))
+        story.append(p(heading, "h1"))
 
-    story.append(p("AVE üzerinde ses ve görüntü arasındaki zaman kaymasının etkisi", "title"))
-    story.append(p("Eren Kahraman<br/>Yıldız Teknik Üniversitesi<br/>YZM5110 Multimodal Learning<br/>Araştırma projesi · 11 Kasım 2026", "small"))
-    story.append(p(f'<b>GitHub deposu</b><br/><link href="{escape(repo_url)}" color="#087b68">{escape(repo_url)}</link>', "small"))
+    story.append(p(title, "title"))
+    story.append(p("Eren Kahraman<br/>Yildiz Technical University<br/>YZM5110 Multimodal Learning"
+                   "<br/>Research project · 11 November 2026", "small"))
+    story.append(p(f'<b>Public repository</b><br/><link href="{escape(repo_url)}" color="#087b68">'
+                   f'{escape(repo_url)}</link>', "small"))
     if not published:
-        story.append(p("Depo bağlantısı planlanan hedeftir. Herkese açık yayımlama onayı bekleniyor.", "small"))
-    story.append(p("Özet", "h2"))
-    prose("""Bu çalışma, yayımlanmış A+V-att modelinde ses ile görüntü arasındaki saat kaymasının olay konumlandırmaya etkisini inceler. Ses özellikleri 0, ±1 ve ±2 saniye kaydırılır. Her koşul, aynı sınır bölümleri sıfırlanmış kaydırmasız kontrolle karşılaştırılır. Model ağırlıkları ve özgün etiketler sabittir.
+        story.append(p("Planned repository address. Public publication is pending.", "small"))
+    story.append(p("Abstract", "h2"))
+    prose("""This study measures the effect of audio-video clock errors on event localization with the published A+V-att model. Precomputed audio features are shifted by 0, ±1 and ±2 seconds. Each shift is compared with an unshifted control receiving exactly the same boundary mask. Model weights and original target labels are fixed.
 
-Özgün AVE testindeki 402 klipte iki saniyelik kayma, referansı ortalama 1,89 yüzde puanı düşürdü (%95 güven aralığı [1,06, 2,74]). Tek müdahale olan yerel ses ortalaması, kaydırılmış örneklerde referansa göre 0,83 puan kazandırdı [0,29, 1,35]. Kayma kaybındaki azalma 0,58 puan oldu ve aralığı sıfırı içerdi [-0,04, 1,18]. Sonuçlar, küçük bir ses ön işlemesinin faydasını ve temiz girdideki maliyetini birlikte gösterir.""")
-    story.append(p("1 Araştırma sorusu ve kapsam", "h2"))
-    prose("""Araştırma sorusu, ses akışı görüntüye göre öne veya arkaya kaydırıldığında A+V-att'nin özgün olay sınıfını ve zamanını ne ölçüde geri kazanabildiğidir. Saat kayması, çok kipli kanıtın aynı zaman damgasında güvenilir biçimde birleştiği varsayımını sınar.
+On the original 402-clip AVE test split, a two-second shift reduces baseline accuracy by an average of 1.89 percentage points relative to matched controls (95% confidence interval [1.06, 2.74]). A single intervention, local audio averaging, improves shifted accuracy by 0.83 points over the baseline [0.29, 1.35]. Its reduction in the matched shift penalty is 0.58 points, with an interval including zero [-0.04, 1.18]. The experiment reports both the benefit under shifts and the cost on aligned inputs.""")
+    story.append(p("1 Research question and scope", "h2"))
+    prose("""The question is how well A+V-att recovers the original event class and timing when the audio stream arrives earlier or later than the video. A clock error tests the assumption that evidence from the two modalities is aligned at a shared timestamp.
 
-Katkılar; beş makalenin eleştirel karşılaştırması, yayımlanmış checkpoint'in özgün testte yeniden üretimi, iki yönlü ve eş maskeli kayma protokolü, yerel ses ortalaması ile norm eşlemeli ablasyon ve kaynak video düzeyinde belirsizlik analizidir. Çalışma bir saniyelik hazır özelliklerle, tek checkpoint ve CPU çıkarımıyla sınırlıdır. [1, 6]""")
+The contributions are a critical comparison of five papers, reproduction of a published checkpoint on the original test split, a bidirectional shift protocol with matched boundary masks, local audio averaging with a norm-matched ablation, and uncertainty estimation at the source-video level. The scope is one checkpoint, one-second precomputed features and CPU inference. [1, 6]""")
 
-    page("2 Literatür araması ve eleştirel sentez")
-    prose("""İlk tarama 9 Kasım 2026'da “audio-visual event localization AVE temporal misalignment”, “temporal inconsistent audio-visual event localization” ve “audio-visual event localization AVE cross-temporal alignment” sorgularıyla yapıldı. Yayıncı kayıtları, tam metinler ve yazar depoları kullanıldı. Seçim, AVE bölüm doğruluğunu raporlayan ve farklı bir kipler arası etkileşim mekanizması sunan beş çalışmaya odaklandı. Bu proje odaklı taramanın kapsamlı bir sistematik derleme iddiası yoktur.
+    page("2 Literature search and critical synthesis")
+    prose("""The initial search on 9 November 2026 used the queries “audio-visual event localization AVE temporal misalignment”, “temporal inconsistent audio-visual event localization” and “audio-visual event localization AVE cross-temporal alignment”. Publisher records, full texts and author repositories were consulted. Selection focused on five papers reporting AVE segment accuracy and representing different cross-modal interaction mechanisms. This is a focused project review.
 
-Tian vd. aynı saniyedeki sesle görsel bölgeleri ağırlıklandırır. CMAN, ne zaman ve hangi kipe güvenileceğini kapılarla seçer. PSP, eşzamanlı olmayı gerektirmeyen pozitif çiftler arasında özellik taşır. CMBS, karşı kipteki ilgisiz kanıtı bastırır. AVSGN, sınıf metinlerinin ortak anlamından ve zamanlar arası alt graflardan yararlanır. [1-5]
+Tian et al. use the audio at each second to weight visual regions. CMAN gates when and which modality to trust. PSP propagates features between useful pairs that need not be synchronous. CMBS suppresses irrelevant cross-modal evidence. AVSGN uses class-text semantics and cross-time subgraphs. [1-5]
 
-Yayınlardaki ablasyonlar, mekanizmaları kendi sistemleri içinde değerlendirir. CMAN'da sentinel çıkarılması %77,1'i %76,1'e; PSP çıkarılması %77,8'i %73,7'ye; CMBS zaman bastırmasının çıkarılması %79,3'ü %77,93'e indirir. AVSGN ses-görüntü alt grafı çıkarılınca %83,1'den %80,3'e iner. Bunlar yayınlardan alınan değerlerdir. [2-5]""")
-    story.append(table([["Çalışma", "Tam / zayıf denetimli yayın skoru", "Ana mekanizma"],
-                        ["AVEL 2018", "%72,7 / %66,7", "Sesle yönlendirilen görsel dikkat"],
-                        ["CMAN 2020", "%77,1 / %75,7", "Uyarlamalı kip ve zaman seçimi"],
-                        ["PSP 2021", "%77,8 / %73,5", "Pozitif bölüm çiftlerinden yayılım"],
-                        ["CMBS 2022", "%79,3 / %74,2", "Zaman ve olay düzeyinde bastırma"],
-                        ["AVSGN 2025", "%83,1 / %78,8", "Metin destekli anlamsal alt graflar"]], [105, 169, 229]))
+Within-system ablations provide evidence for the respective components. Removing CMAN's sentinel changes accuracy from 77.1% to 76.1%. Removing PSP changes 77.8% to 73.7%. Removing CMBS temporal suppression changes 79.3% to 77.93%. Removing AVSGN's audio-visual subgraph changes 83.1% to 80.3%. These are published results. [2-5]""")
+    story.append(table([["Study", "Published full / weak supervision", "Main mechanism"],
+                        ["AVEL 2018", "72.7% / 66.7%", "Audio-guided visual attention"],
+                        ["CMAN 2020", "77.1% / 75.7%", "Adaptive modality and time selection"],
+                        ["PSP 2021", "77.8% / 73.5%", "Positive-pair feature propagation"],
+                        ["CMBS 2022", "79.3% / 74.2%", "Temporal and event suppression"],
+                        ["AVSGN 2025", "83.1% / 78.8%", "Text-supported semantic subgraphs"]], [105, 169, 229]))
     story.append(Spacer(1, 12))
-    prose("""Skorlar arasındaki artış tek bir bileşene bağlanamaz. Kodlayıcılar, eğitim sinyalleri ve uygulama ayrıntıları farklıdır. Örneğin AVSGN, Tian'ın VGG özellikleri yerine CLIP/CLAP kullanır. Projenin yaklaşımı bu sistemleri yeniden eğitmek yerine, tek checkpoint'te kontrollü kaymayı ve sınır kaybını ölçmektir. Ek A, yönergedeki yedi alanı her makale için karşılaştırır.
+    prose("""Cross-paper score differences also reflect encoders, training signals and implementation details. For example, AVSGN uses CLIP/CLAP features instead of Tian et al.'s VGG-based features. This project therefore measures controlled shifts and boundary losses within one fixed checkpoint. Appendix A covers all seven comparison fields required by the assignment.
 
-Zamansal kaydırmanın kendisi yeni bir fikir olarak ileri sürülmez. AV-AND deposunda AVE üzerinde kayma denemeleri vardır. Buradaki katkı, seçilen ağırlıklarda iki yönü, eş sınır maskesini ve eşlenmiş belirsizliği birlikte raporlayan sınırlı bir deneydir. [10]""")
+Controlled shifting has prior examples, including the AV-AND repository. The present contribution is a limited experiment combining both directions, matched masks and paired uncertainty estimates for the selected weights. [10]""")
 
-    page("3 Seçilen yöntemin teknik açıklaması")
-    prose("""AVE görevinde her 10 saniyelik klip, birer saniyelik on bölüme ayrılır. Her bölümün hedefi 28 olay sınıfından biri veya arka plandır. Hazır ses vektörü a(t), 128 boyutludur. Görsel özellik V(t), 7 × 7 konumda 512 boyutlu vektör taşır. [1, 6]
+    page("3 Technical explanation of A+V-att")
+    prose("""Each ten-second AVE clip is divided into ten one-second segments. A segment is assigned one of 28 event classes or background. The precomputed audio vector a(t) has 128 dimensions. Visual features V(t) contain a 512-dimensional vector at each position in a 7 × 7 spatial grid. [1, 6]
 
-A+V-att önce görsel ve işitsel özellikleri doğrusal dönüşüm ve ReLU ile işler. Ses temsili, aynı saniyedeki bütün görsel konumlara yayınlanır. Öğrenilmiş dönüşümler ve tanh, her görsel konumun dikkat skorunu üretir. Konumlar üzerinde softmax ile normalize edilen dikkat, özgün görsel vektörlerin ağırlıklı toplamını verir.
+A+V-att applies linear transformations and ReLU to audio and visual features. The audio representation is broadcast across visual positions at the same second. Learned transformations and tanh produce spatial attention scores. A softmax over positions normalizes the scores, and their weighted sum summarizes the original visual vectors.
 
-Bu özet görsel dizi ve özgün ses dizisi iki ayrı çift yönlü LSTM'ye girer. Her LSTM'nin yön başına gizli boyutu 128'dir. İki dizinin 256 boyutlu çıktıları birleştirilir. ReLU, 512'den 64'e doğrusal katman, ReLU ve 29 sınıflı çıktı katmanı ardından softmax bölüm olasılıklarını verir. Tahmin en yüksek olasılıklı sınıftır. [6]""")
-    story.append(p("Görsel dikkat ve karar", "h2"))
-    prose("""Her saniyede görsel özet, c(t) = toplam_j alpha(t,j) V(t,j) biçimindedir. alpha(t,j), konumlar üzerinde toplamı 1 olan öğrenilmiş ses koşullu ağırlıklardır. Son karar p(y(t) | A,V), iki BiLSTM'nin bütün klipten aldığı bağlama dayanır. Bu yüzden yalnız puanlanan orta saniyelere bakmak, sınırdaki ses kaybının model içindeki etkisini ortadan kaldırmaz.
+The attended visual sequence and the original audio sequence enter separate bidirectional LSTMs. Each direction has hidden size 128. The resulting 256-dimensional outputs are concatenated. ReLU, a 512-to-64 linear layer, ReLU, a 29-class linear layer and softmax produce segment probabilities. The largest probability determines the predicted class. [6]""")
+    story.append(p("Visual attention and temporal context", "h2"))
+    prose("""The visual summary is c(t) = sum_j alpha(t,j) V(t,j), where alpha(t,j) sums to one over spatial positions. The final decision p(y(t) | A,V) depends on both BiLSTMs and their context across the entire clip. Consequently, scoring only the central seconds does not remove the effect of missing boundary audio inside the model.
 
-Ses kayması önce aynı saniyedeki görsel dikkati, ardından ses BiLSTM bağlamını etkileyebilir. Bu bağlantı deneyin hipotezini kurar. Ana ölçüm bu iki etkinin birleşik sonucudur. Dikkat haritaları veya gizli durumlara yönelik nedensel bir ayrıştırma yapılmadı.
+An audio shift can affect both the initial audio-guided visual attention and the temporal audio representation. This motivates the hypothesis. The reported accuracy measures their combined effect. Attention maps and hidden states were not causally disentangled.
 
-Makale tam denetimli sınıflandırmayı çapraz entropiyle açıklar. İncelenen eğitim betiği MultiLabelSoftMarginLoss kullanır. Proje hazır ağırlıklarla yalnız çıkarım yaptığı için bu fark kaydedildi. Aynı kodun yeniden eğitim sonucu, bu rapordaki checkpoint değerlendirmesinden farklı bir yeniden üretim hedefi olur. [1, 6]""")
-    story.append(p("Dersle bağlantı", "h2"))
-    prose("""Hafta 3'teki füzyon ve bozuk kip kontrolleri, tek bileşenin eş koşullarda sınanmasına karşılık gelir. Hafta 4'teki zaman birimi, saat kayması ve hizalama tartışması bir saniyelik ofsetleri motive eder. Hafta 5'teki kaynak ailesine göre bölme ilkesi, eğitim/doğrulama ile kaynak video örtüşmesini ayrıca incelemeyi gerektirir. [9]""")
+The paper describes cross-entropy for supervised classification, while the inspected training script uses MultiLabelSoftMarginLoss. This discrepancy is recorded because the project evaluates an existing checkpoint. Reproducing training would require resolving this choice as a separate target. [1, 6]""")
+    story.append(p("Connection to the course", "h2"))
+    prose("""Week 3 connects fusion to controls for corrupted modalities. Week 4 motivates specifying the alignment unit and studying clock errors. Week 5 emphasizes grouping data by source families, motivating the additional source-video overlap analysis. [9]""")
 
-    page("4 Yeniden üretim hedefi ve uyarlamalar")
-    prose("""Hedef, Tian vd.'nin Tablo 1'inde A+V-att için yayımlanan %72,7 bölüm doğruluğunu özgün test bölümünde yeniden üretmektir. Başlangıç beklentisi, aynı hazır özellikler ve checkpoint ile makalenin bir ondalık basamakta verdiği skora yaklaşmaktır. Aynı kaynaklar ve doğrulanmış veri sırası altında belirgin bir fark, veri veya uygulama uyumsuzluğunu araştırmayı gerektirir. [1]
+    page("4 Reproduction target and implementation")
+    prose("""The reproduction target is the 72.7% supervised A+V-att segment accuracy in Tian et al.'s Table 1 on the original AVE test split. With the published features and checkpoint, the expectation is agreement at the paper's one-decimal precision. A substantial discrepancy under verified inputs would require investigating data or implementation mismatches. [1]
 
-Özgün model kaynağı ve ağırlık SHA-256 özetleri denetlenir. Eski PyTorch pickle'ı yalnız beklenen sınıflar için izin veren yükleyiciyle okunur. Modern ağ kurulduktan sonra bütün checkpoint parametreleri strict=True ile yüklenir. Dört CUDA sıfır gizli durumu, girdi cihazında oluşturulacak şekilde bellekte değiştirilir. Eski Xavier başlatıcısının adı güncellenir. Öğrenilmiş parametreler korunur. [6]""")
-    story.append(table([["Ölçüm", "Doğru bölüm / toplam", "Doğruluk"],
-                       ["Yayımlanmış A+V-att", "Makale Tablo 1", "%72,7"],
-                       ["Bu proje, maskesiz 0 sn", "2.924 / 4.020", f"%{number(ref['accuracy_percent'], 4)}"]], [205, 180, 118]))
+The source and checkpoint are checked using SHA-256. A restricted loader accepts only expected legacy PyTorch classes. All checkpoint parameters are loaded into the modern network with strict=True. Four CUDA-specific zero states are created on the input device, and the legacy Xavier initializer is renamed. Learned parameters are retained. The checkpoint is model/AV_att.pt. [6]""")
+    story.append(table([["Measurement", "Correct / total segments", "Accuracy"],
+                       ["Published A+V-att", "Paper Table 1", "72.7%"],
+                       ["This project, unmasked 0 s", "2,924 / 4,020", f"{number(ref['accuracy_percent'], 4)}%"]], [205, 180, 118]))
     story.append(Spacer(1, 12))
-    prose("""Yuvarlanmış yayın değerine fark +0,0363 yüzde puanı. İki değer bir ondalık basamakta %72,7'dir. Bu sonuç yayımlanmış ağırlıkların çıkarım yeniden üretimidir.
+    prose("""The difference from the rounded published score is +0.0363 percentage points. Both values are 72.7% at one decimal. This reproduces inference with the released weights.
 
-Özgün ortam Python 3.6/PyTorch 0.3.0 iken çalışma Python 3.12.14/PyTorch 2.15.0, NumPy 2.5.4 ve h5py 3.16.0 ile macOS arm64 CPU'da yapıldı. Doğruluk çıkarımında 16 kliplik gruplar ve 4 CPU iş parçacığı kullanıldı.
+The original environment was Python 3.6 and PyTorch 0.3.0. This experiment used Python 3.12.14, PyTorch 2.15.0, NumPy 2.5.4 and h5py 3.16.0 on a macOS arm64 CPU. Accuracy inference used batches of 16 clips and four CPU threads.
 
-Google Drive ses bağlantısı kota hatası verdiği için aynı beklenen şekil ve boyuttaki LECOO/AVE aynası kullanıldı. Görüntü özellikleri yazarların HDF5 dosyasından, doğru HTTP 206 Content-Range başlığı ve bayt uzunluğu zorunlu tutularak alındı. Ses aynasının özgün dosyayla tam dosya özeti karşılaştırması yapılamadı. Bu sınır bütün sonuçların yorumuna dahildir. [7, 8]
+The official audio download returned a Google Drive quota error, so the LECOO/AVE mirror with the expected shape and size was used. Visual features were read from the authors' HDF5 file using HTTP ranges that require matching 206 Content-Range headers and byte counts. Full-file identity between the audio mirror and the official file remains unverified. [7, 8]
 
-İlk veri denemesinde tamamen sıfır ses döndüren aralık okuması tespit edildi ve o koşu elendi. Sonraki üç kliplik kontrolde özellikler sonlu ve sıfırdan farklıydı, etiketler aynı veri satırından alındı ve model (3,10,29) çıktı verdi. Yayımlanmış tablolarda kullanılan deneyler bu doğrulanmış veri yolundan üretildi.""")
-    story.append(p("Kaynak revizyonu", "h2"))
+An initial data-access attempt returned all-zero audio and was rejected. A later three-clip check verified finite, nonzero features and matching row-level labels, and the model produced outputs of shape (3,10,29). The reported experiments use this verified data path.""")
+    story.append(p("Pinned upstream revision", "h2"))
     story.append(p("93f843fed72fb17394df76330df958b0c2dbde76", "small"))
 
-    page("5 Önerilen iyileştirme ve gerekçesi")
-    prose("""Doğrulama bölümünde iki saniyelik kaymada eş maskeli kontrole göre net 77 doğru bölüm kaybı görüldü. Sesin kaynak saniyesi ile hedef saniyenin olay varlığı ayrıştığında kayıp yoğunlaştı. Örneğin çan başlangıcından sonraki sesin erken bir arka plan bölümüne gelmesi, modeli olayı erken tahmin etmeye yöneltebilir.
+    page("5 Proposed improvement and rationale")
+    prose("""On validation, two-second shifts produced a net loss of 77 correct segments relative to matched controls. Losses were concentrated where the event-presence label differed between the audio source second and target second. Audio from after an event onset can make the model predict the event too early.
 
-Bu gözlemden sonra, iyileştirme koşusu görülmeden önce tek müdahale seçildi. Her merkez ses vektörü, yarıçapı iki saniye olan pencerenin geçerli komşularıyla harmanlandı. Merkez %50, komşu ortalaması %50 ağırlık taşır. Merkez ortalamaya ikinci kez katılmaz. Yapay sınır boşlukları ortalamaya girmez ve sıfır kalır. Geçerli komşu yoksa merkez korunur. Sıfır merkez vektörü iki kolda da sıfır kalır.""")
-    story.append(p("İşlem", "h2"))
-    prose("""N(t), 0 &lt; |s-t| ≤ 2 koşulunu ve geçerli ses maskesini sağlayan komşular olsun. m(t), N(t) içindeki a(s) vektörlerinin ortalamasıdır. Müdahale b(t) = 0,5 a(t) + 0,5 m(t) uygular. Girdi, A+V-att'nin hem görsel dikkat hem ses LSTM yoluna bu biçimde verilir.
+Before evaluating the intervention, one candidate was chosen. Each audio vector is blended with valid neighboring vectors within two seconds. The center receives 50% weight and the neighbor mean receives 50%. The center is excluded from that mean. Artificial boundary padding is excluded and remains zero. The center is retained when no valid neighbor exists. A zero center stays zero in both treatment and ablation.""")
+    story.append(p("Local audio averaging", "h2"))
+    prose("""Let N(t) contain valid neighbors s satisfying 0 &lt; |s-t| ≤ 2. Let m(t) be the mean of a(s) over N(t). The intervention is b(t) = 0.5 a(t) + 0.5 m(t). The processed input enters both the visual-attention and audio-LSTM paths of A+V-att.
 
-Beklenti, kaymış başlangıç veya bitiş yakınındaki komşuların doğru olaya ait bilgiyi hedef saniyeye kısmen taşımasıdır. Yöntem kayma yönünü veya büyüklüğünü tahmin etmez. Yalnız verilen geçerlilik maskesini kullanır. Özgün görüntü ve etiketler sabittir. Doğru hizalanmış örneklerde komşu karışımı geçişi bulanıklaştırabilir.""")
-    story.append(p("Norm eşlemeli ablasyon", "h2"))
-    prose("""Ablasyon u(t) = a(t) ||b(t)||₂ / ||a(t)||₂ uygular. Sesin merkezdeki özellik yönünü koruyup büyüklüğünü müdahaleninkiyle eşler. Bu, komşu özellik yönlerinin katkısını yalnız norm değişiminden ayırmaya yardımcı olur. Ablasyonun norm hedefi de komşulardan geldiği için bu kontrolün kendisi zaman bağlamı kullanır.
+The rationale is that nearby seconds can partly restore relevant audio around a displaced onset or offset. The method uses the provided validity mask and does not estimate shift direction or magnitude. Mixing neighbors can also blur transitions in correctly aligned inputs.""")
+    story.append(p("Norm-matched ablation", "h2"))
+    prose("""The ablation applies u(t) = a(t) ||b(t)||₂ / ||a(t)||₂. It retains the center vector's direction and matches the treatment's norm. This helps separate the contribution of neighboring feature directions from a change in magnitude. The target norm itself depends on neighbors, so the ablation also uses temporal context.
 
-Doğrulama tamamlandığında ±2 saniyede ortalama doğruluk referansta %71,56, müdahalede %72,16, ablasyonda %71,27 bulundu. Kaydırmasız doğruluk %73,42'den %73,34'e indi. Yarıçap veya karışım ağırlığı için test üzerinde arama yapılmadı. Bu tek aday ve bütün gözlenen olumsuz sonuçlar kayıt altına alındı.
+On validation, mean accuracy at ±2 seconds was 71.56% for the baseline, 72.16% for local averaging and 71.27% for the ablation. Unshifted accuracy changed from 73.42% to 73.34%. The radius and mixing weight were fixed before test evaluation. This single candidate and its unfavorable outcomes were retained.
 
-Yapılandırma ve yöntem dosyası SHA-256 özetleri testten önce doğrulama çıktısına yazıldı. Test betiği bu özetler uyuşmazsa durur. Böylece aşağıdaki test sonuçları aynı müdahalenin değerlendirmesidir.""")
+Configuration and method-file hashes were recorded in the validation output. The test script stops if they differ. The test results therefore evaluate the same specified intervention.""")
 
-    page("6 Deney tasarımı ve ölçüler")
-    story.append(table([["Bileşen", "Sabitlenen protokol"],
-                       ["Veri bölümleri", "3.339 eğitim / 402 doğrulama / 402 özgün test"],
-                       ["Girdiler ve hedef", "10 × 128 ses, 10 × 7 × 7 × 512 görüntü; 29 sınıflı özgün etiket"],
-                       ["Ofsetler", "-2, -1, 0, +1, +2 saniye; pozitif ofset sesi geciktirir"],
-                       ["Sınırlar", "Taşıma yok; boş ses sıfır; eş kontrolde aynı sınır sıfır"],
-                       ["Puanlama", "Her yöntemde ve koşulda 2-7 indisleri, 2.412 bölüm"],
-                       ["Belirsizlik", "10.000 kaynak video bootstrap tekrarı, seed 2026"],
-                       ["Gecikme", "CPU 4 iş parçacığı; tek klip; 5 ısınma; her ofsette ilk 32 klip"]], [132, 371]))
+    page("6 Experimental design and metrics")
+    story.append(table([["Component", "Fixed protocol"],
+                       ["Splits", "3,339 training / 402 validation / 402 original test clips"],
+                       ["Inputs and target", "10 × 128 audio, 10 × 7 × 7 × 512 video; 29 original target classes"],
+                       ["Offsets", "-2, -1, 0, +1, +2 seconds; positive offsets delay audio"],
+                       ["Boundaries", "Zero padding without wraparound; identical zeros in the paired control"],
+                       ["Scoring", "Indices 2-7 in every condition; 2,412 segments"],
+                       ["Uncertainty", "10,000 source-video bootstrap replicates; seed 2026"],
+                       ["Latency", "4 CPU threads; one clip; 5 warmups; first 32 clips per offset"]], [132, 371]))
     story.append(Spacer(1, 12))
-    prose("""Ofset k için kaydırılmış ses a_k(t) = a(t-k) olur. Klip dışına çıkan kaynaklar sıfırdır. Örneğin +2'de ilk iki ses bölümü sıfırlanır. Kontrolde ses kaydırılmaz ve aynı ilk iki bölüm sıfırlanır. -2'de son iki bölüm iki kolda da sıfırdır. Klip uçları birbirine sarılmaz. BiLSTM bütün klibi gördüğü için bu eşleme çıkarımdan önce uygulanır.
+    prose("""For offset k, shifted audio is a_k(t) = a(t-k). Out-of-clip values are zero. At +2 seconds, the first two audio segments are zero. The aligned control zeros exactly those same positions. At -2 seconds, both arms zero the last two segments. The BiLSTM observes all ten seconds, so matching is applied before inference.
 
-Birincil kayma ölçüsü D₂, ±2 yönlerinin eş maskeli kontrol eksi kaydırılmış doğruluk farkının ortalamasıdır. Beklenti D₂ &gt; 0. İkincil beklenti D₂ &gt; D₁'dir. Müdahale için birincil karşılaştırma ±2 kaydırılmış doğrulukta yerel ortalama eksi referans farkıdır. Aynı fark ablasyona karşı da ölçülür. Kaydırmasız maliyet ve yöntem başına D₂ ayrıca raporlanır.
+The primary shift metric D₂ is the mean of control minus shifted accuracy across ±2 seconds. The hypothesis is D₂ &gt; 0, with secondary expectation D₂ &gt; D₁. The primary intervention contrast is local averaging minus baseline accuracy on shifted inputs, averaged across ±2 seconds. The same contrast is evaluated against the ablation. Aligned-input costs and each method's D₂ are reported separately.
 
-Bootstrap, kaynak video kimliklerini bütün yöntem ve ofsetlerle birlikte yeniden örnekler. Yüzdelik %2,5 ve %97,5 sınırları %95 aralığı verir. Mutlak skor aralıkları ile eşlenmiş fark aralıkları ayrı hesaplanır. Ofset bazındaki aralıklar çoklu karşılaştırma düzeltmesi içermez. Testteki 402 klibin kaynak kimlikleri farklıdır. Eğitim/doğrulamayla ortak sekiz kimlik çıkarılarak 394 klipte duyarlılık analizi yapılır.
+Source video IDs are resampled jointly across all methods and offsets. The 2.5th and 97.5th percentiles define 95% intervals. Absolute accuracy and paired differences receive separate intervals. Per-offset intervals are unadjusted for multiple comparisons. The 402 test clips have distinct source IDs. Excluding eight IDs shared with training or validation yields a 394-clip sensitivity analysis.
 
-Gecikme, bellekteki özelliklerden ön işleme, model ve argmax sonuna kadar ölçülür. Disk/ağ erişimi ve ham kiplerden özellik çıkarımı bu süreye dahil değildir. Yöntem çağrı sırası klipler arasında döndürülür. Zamanlama başına 160 gözlemden medyan ve p95 raporlanır.""")
+Latency includes preprocessing, model execution and argmax from features already in memory. It excludes network access, disk access and raw feature extraction. Method order rotates across clips. Each arm has 160 observations, summarized by median and p95.""")
 
-    page("7 Sonuçlar ve eşlenmiş kontroller")
-    story.append(p("Kaydırılmış bölüm doğruluğu", "h2"))
-    rows = [["Kayma", "A+V-att", "Yerel ortalama", "Norm eşlemeli"]]
+    page("7 Results and matched controls")
+    story.append(p("Accuracy with shifted audio", "h2"))
+    rows = [["Offset", "A+V-att", "Local averaging", "Norm-matched"]]
     for condition in test["conditions"]:
-        line = [f"{condition['offset_seconds']:+d} sn"]
+        line = [f"{condition['offset_seconds']:+d} s"]
         for method in methods:
             value = condition["methods"][method]
             bounds = value["accuracy_ci95_percent"]["shifted"]
-            line.append(f"%{number(value['accuracy_percent']['shifted'])}\n[{number(bounds[0])}, {number(bounds[1])}]")
+            line.append(f"{number(value['accuracy_percent']['shifted'])}%\n[{number(bounds[0])}, {number(bounds[1])}]")
         rows.append(line)
     story.append(table(rows, [62, 147, 147, 147]))
     story.append(Spacer(1, 12))
-    story.append(p("İki yönün ortalamasında kayma kaybı", "h2"))
-    rows = [["Yöntem", "D₁ (yüzde puanı)", "D₂ (yüzde puanı)"]]
+    story.append(p("Mean shift penalty across directions", "h2"))
+    rows = [["Method", "D₁ (percentage points)", "D₂ (percentage points)"]]
     for method in methods:
         rows.append([labels[method], measured(test["overall"][method]["d1_pp"]), measured(test["overall"][method]["d2_pp"])])
     story.append(table(rows, [145, 179, 179]))
     story.append(Spacer(1, 12))
-    prose("""Referansın D₂ aralığı sıfırın üstünde olduğu için birincil kayma hipotezi desteklenir. D₂ - D₁ farkı 1,49 [0,68, 2,34] yüzde puanıdır. Bir saniyelik kaymada toplam yön ortalaması belirsizken iki saniyede düşüş daha belirgindir. İleri ve geri yönün büyüklüğü aynı değildir.
+    prose("""The baseline D₂ interval lies above zero, supporting the primary shift hypothesis. D₂ - D₁ is 1.49 [0.68, 2.34] percentage points. The two-second penalty is clearer than the mean one-second penalty. The forward and backward directions have different magnitudes.
 
-Yerel ortalama ±2 saniyede ortalama %70,52, referans %69,69 ve ablasyon %69,96 verdi. Müdahale referansı 0,83 [0,29, 1,35], ablasyonu 0,56 [0,02, 1,10] yüzde puanı geçti. Ablasyon farkının alt sınırı sıfıra yakındır. Referansa göre kayma kaybındaki azalma 0,58 [-0,04, 1,18] puandır. Kaydırılmış doğruluk kazanımı, kayma kaybının azaldığı iddiasından daha kesin görünmektedir.""")
+At ±2 seconds, local averaging reaches 70.52%, the baseline 69.69% and the ablation 69.96%. Local averaging gains 0.83 [0.29, 1.35] points over the baseline and 0.56 [0.02, 1.10] over the ablation. The latter lower bound is close to zero. The reduction in the matched shift penalty is 0.58 [-0.04, 1.18] points. Evidence for improved shifted accuracy is stronger than evidence for a reduced shift penalty.""")
 
-    page("7 Sonuçlar için doğruluk grafiği")
+    page("7 Accuracy and paired differences")
     story.append(Image(str(RESULTS / "ave_test_accuracy.png"), width=503, height=398))
-    story.append(p("Şekil 1. Üst panel kaydırılmış örneklerin bölüm doğruluğunu, alt panel yerel ortalama ile iki karşılaştırmanın eşlenmiş farklarını gösterir. Çubuklar kaynak video düzeyinde %95 bootstrap güven aralıklarıdır.", "small"))
-    story.append(p("Sınır maskesinin etkisi", "h2"))
-    rows = [["Kaymanın kontrolü", "A+V-att (%)", "Yerel ortalama (%)", "Norm eşlemeli (%)"]]
+    story.append(p("Figure 1. Top, segment accuracy with shifted audio. Bottom, paired gains from local averaging against the baseline and ablation. Bars show source-video bootstrap 95% confidence intervals.", "small"))
+    story.append(p("Aligned controls with matched boundary masks", "h2"))
+    rows = [["Paired offset", "A+V-att (%)", "Local averaging (%)", "Norm-matched (%)"]]
     for condition in test["conditions"]:
-        rows.append([f"{condition['offset_seconds']:+d} sn", *[
+        rows.append([f"{condition['offset_seconds']:+d} s", *[
             number(condition["methods"][m]["accuracy_percent"]["aligned"]) for m in methods]])
     story.append(table(rows, [122, 127, 127, 127]))
     story.append(Spacer(1, 10))
-    prose("""Her kaymanın kontrolü farklı sınırı maskelediği için ayrı bir skor üretir. Örneğin +2 referansı kendi %71,89 kontrolüyle, -2 referansı kendi %71,27 kontrolüyle karşılaştırılır. Tablonun 0 saniyesi %72,60'tır ve altı saniyelik puanlamaya aittir. Makaleyle karşılaştırılan tam klip skoru %72,7363'tür.""")
+    prose("""Each offset masks a different boundary, so its aligned control has its own score. The +2 baseline is compared with its 71.89% control, and -2 with its 71.27% control. The 0-second value of 72.60% uses the central six seconds. The full-clip reproduction score is 72.7363%.""")
 
-    page("7 Kaynak ölçümü ve hata analizi")
-    rows = [["Yöntem", "Medyan ms/klip", "p95 ms/klip", "Çağrı"]]
+    page("7 Latency and failure analysis")
+    rows = [["Method", "Median ms/clip", "p95 ms/clip", "Calls"]]
     for method in methods:
         value = test["latency"]["methods"][method]
         rows.append([labels[method], number(value["median_ms"], 3), number(value["p95_ms"], 3), value["samples"]])
     story.append(table(rows, [167, 124, 124, 88]))
     story.append(Spacer(1, 12))
-    prose("""Yerel ortalama medyana yaklaşık 0,020 ms/klip, yani %2,9 ekledi. Bu değer kısa CPU çağrılarının ölçümüdür ve makine yükünden etkilenebilir.
+    prose("""Local averaging adds about 0.020 ms/clip, or 2.9%, to the median in this run. These short CPU measurements are sensitive to machine load.
 
-İki saniyelik kaymada olay varlığının hedef ve kaynak saniyeler arasında ayrıştığı 508 bölüm, 4.824 bölüm koşulunun %10,5'idir. Referansın eş maskeli kontrollere göre net 91 kaybının 76'sı (%83,5) bu gruptadır. Bu gruplama özgün zaman etiketlerine dayanır.
+At ±2 seconds, event presence differs between source and target seconds in 508 of 4,824 segment-conditions (10.5%). This group accounts for 76 of the baseline's 91 net losses relative to matched controls (83.5%). Grouping uses the original temporal annotations.
 
-Yerel ortalama iki yönde 86 hatayı düzeltti ve 46 yeni hata yaptı. Ayrışan olay varlığı grubunda bu sayılar 21 ve 8'dir. 0 saniyede 27 hata düzeldi ve 29 doğru bölüm bozuldu. Yöntemin temiz girdi üzerindeki ortalama farkı -0,08 [-0,70, 0,54] puandır.""")
-    story.append(table([["Örnek", "Hedef ve referans", "Yerel ortalama"],
-                       ["Satır 27, +2 sn, t=5. Çan 5-10 sn. Kaynak ses t=3.", "Hedef çan. Referans arka plan.", "Çan. Başlangıç geri kazanıldı."],
-                       ["Satır 421, +2 sn, t=2. Havlama 1-10 sn. Kaynak ses t=0.", "Hedef havlama. Referans havlama.", "Arka plan. Yeni kaçırma."],
-                       ["Satır 68, 0 sn, t=6. Çan 6-10 sn.", "Hedef çan. Referans çan.", "Arka plan. Temiz başlangıç bulanıklaştı."]], [210, 155, 138]))
+Across the two directions, local averaging corrects 86 errors and introduces 46. In the event-presence mismatch group, these counts are 21 and 8. At zero shift, 27 errors are corrected and 29 correct segments are broken. The aligned-input difference is -0.08 [-0.70, 0.54] percentage points.""")
+    story.append(table([["Example", "Target and baseline", "Local averaging"],
+                       ["Row 27, +2 s, t=5. Bell at 5-10 s. Source audio t=3.", "Target bell. Baseline background.", "Bell. Onset recovered."],
+                       ["Row 421, +2 s, t=2. Bark at 1-10 s. Source audio t=0.", "Target bark. Baseline bark.", "Background. New miss."],
+                       ["Row 68, 0 s, t=6. Bell at 6-10 s.", "Target bell. Baseline bell.", "Background. Aligned onset blurred."]], [210, 155, 138]))
     story.append(Spacer(1, 12))
-    prose("""Eğitim veya doğrulamayla kaynak kimliği ortak sekiz klip çıkarıldığında 394 klip kalır. Referans D₂ = 1,92 [1,10, 2,81] puandır. Müdahalenin referansa kazancı 0,85 [0,32, 1,40], ablasyona kazancı 0,57 [0,02, 1,12] puandır. D₂ azalması 0,59 [-0,04, 1,23] puanla belirsizliğini korur. Ana yorum bu filtreye duyarlı görünmemektedir.""")
+    prose("""Removing eight clips whose source IDs also occur in training or validation leaves 394 clips. The baseline has D₂ = 1.92 [1.10, 2.81] points. Local averaging gains 0.85 [0.32, 1.40] over the baseline and 0.57 [0.02, 1.12] over the ablation. The D₂ reduction remains uncertain at 0.59 [-0.04, 1.23] points. The main interpretation is similar after this filter.""")
 
-    page("8 Sınırlılıklar ve sonuç")
-    prose("""Özgün AVE testinde iki saniyelik ses kayması, A+V-att'nin özgün olayları geri kazanma başarısını düşürdü. Aynı sınır maskesiyle hesaplanan D₂'nin aralığı sıfırın üstünde. Yerel ses ortalaması, küçük bir gecikme maliyetiyle kaydırılmış doğruluğu artırdı. Kayma kaybını azalttığına ilişkin aralık ise sıfırı içeriyor.
+    page("8 Limitations and conclusions")
+    prose("""A two-second audio shift reduces A+V-att's ability to recover events on the original AVE timeline. Its matched-control D₂ interval is above zero. Local averaging improves shifted accuracy at a small measured latency cost. The interval for reduction of the shift penalty includes zero.
 
-Etiketler özgün zaman çizgisinde sabit tutuldu. Bu kurgu, sensör saat hatası altında özgün olayın geri kazanılmasını sınar. Yapay kaymadan sonra “aynı anda duyulan ve görülen olay” tanımına göre yeni etiket üretmek farklı bir değerlendirme kurar. Sonuçların kapsamı bu hedef seçimine bağlıdır.
+Labels remain on the original timeline. The experiment measures recovery under a sensor clock error. Relabeling the transformed input according to simultaneous audible-visible events would define a different target. This distinction bounds the interpretation.
 
-Tek checkpoint ve tek veri kümesi kullanıldı. Bir saniyelik hazır özellikler, alt saniyelik kaymayı ve ham kodlayıcının davranışını örter. Sentetik sıfır dolgu ve geçerlilik maskesi deney kurulumu tarafından bilinir. Sonuçlar doğal sensör gecikmelerinin bütün çeşitlerini kapsamaz. Yöntem çevrimdışıdır, komşular gelecek saniyeleri ve referans çift yönlü bağlamı kullanır.
+The study uses one checkpoint and one dataset. One-second precomputed features obscure subsecond shifts and raw-encoder behavior. Synthetic padding and the validity mask are known to the experimental pipeline. Natural sensor delays may behave differently. The method is offline, using future neighbors and a bidirectional baseline.
 
-Ses aynası özgün dosyayla tam olarak karşılaştırılamadı. Kaynak video örtüşmesi ayrıca sınandı, ön eğitim kaynaklarıyla olası örtüşme ölçülmedi. Bootstrap aralıkları test örneklemesine ilişkindir. Yeniden eğitim veya checkpoint değişkenliğini kapsamaz. Gecikme yalnız hazır özelliklerden CPU çıkarımını kapsar.
+Full identity of the audio mirror to the official file remains unverified. Source-video overlap was tested, but overlap with pretraining data was not measured. Bootstrap intervals concern test-sample uncertainty and do not cover retraining or checkpoint variability. Latency covers inference from precomputed features.
 
-Açık sorular, alt saniyelik veya değişken gecikme, doğal uyumsuzluk, farklı checkpoint'ler ve komşu harmanının olay sınırlarını koruyan sürümleridir. Bunlar yeni doğrulama tasarımı gerektirir. Bu rapordaki nihai test sonuçlarıyla ayar değiştirilmedi.""")
-    story.append(p("Yapay zekâ kullanımı beyanı", "h2"))
-    prose("""OpenAI Codex; kaynak arama, karşılaştırma matrisi ve sentez taslağı, yazar kodunun CPU uyarlaması, veri doğrulama, deney betikleri, yerel deney yürütme, bootstrap ve hata analizi, grafikler ve rapor/sunum düzenlemesinde kullanıldı. Konu, hipotez, eş maskeli karşılaştırma ve yerel ortalama/ablasyon tasarımı görüşme içinde Codex önerileriyle geliştirildi. Sayısal sonuçlar yerel betik çıktılarından alındı.
+Open questions include subsecond and variable delays, natural inconsistency, other checkpoints, and neighborhood mixing that better preserves event boundaries. These require a new validation design. The method was not tuned using the final test results.""")
+    story.append(p("AI assistance disclosure", "h2"))
+    prose("""OpenAI Codex assisted with source search, the comparison matrix and synthesis draft, CPU adaptation of the authors' implementation, data checks, experiment scripts and local execution, bootstrap and failure analysis, figures, and report/presentation editing. The topic, hypothesis, matched controls and local averaging/ablation design were developed during the conversation with Codex suggestions. Numerical results come from saved local script outputs.
 
-Ödev yönergesinin 7. bölümü beyan edilen desteğe izin verir. Kaynakları okuma, uygulamayı anlama, deney tasarımını değerlendirme, iddiaları ve atıfları doğrulama, sonuçları savunma sorumluluğu Eren Kahraman'a aittir. Somut katkılar depodaki AI_USAGE.md içinde açıklanır.""")
+Section 7 of the assignment permits disclosed assistance. Eren Kahraman remains responsible for reading sources, understanding the implementation, assessing the experimental design, checking claims and citations, and defending the conclusions. Specific contributions are documented in AI_USAGE.md.""")
 
     story.append(NextPageTemplate("landscape"))
-    page("Ek A  Beş makalenin karşılaştırma matrisi")
-    story.append(p("A1  Soru ve katkı, kipler ve varsayımlar, mekanizma ve amaç. T/Z, tam ve zayıf denetimli eğitimi gösterir. Yayın sonuçları bu projenin ölçümlerinden ayrıdır.", "small"))
-    story.append(table([["Makale", "Soru ve katkı", "Kipler ve varsayımlar", "Mekanizma ve amaç"], *[
-        [item["name"], item["question"], item["modalities"], item["mechanism"]] for item in lit]], [100, 218, 204, 228], "matrix"))
+    page("Appendix A  Comparison of five papers")
+    story.append(p("A1  Question and contribution, modalities and assumptions, mechanism and objective. Published findings are distinguished from this project's measurements.", "small"))
+    story.append(table([["Paper", "Question and contribution", "Modalities and assumptions", "Mechanism and objective"], *[
+        [item["name"], item["question"], item["modalities"], item["mechanism"]] for item in lit]],
+        [100, 218, 204, 228], "matrix"))
 
-    page("Ek A  Veri, kanıt ve yeniden üretim")
-    story.append(p("A2  Aynı beş satırın devamı. Böylece her çalışma yönergedeki yedi değerlendirme alanını kapsar. Tam metin kaynakları [1-5].", "small"))
-    story.append(table([["Makale", "Veri ve protokol", "Referans ve kanıt", "Kaynak ve yeniden üretim", "Sınırlılıklar ve bağlantılar"], *[
+    page("Appendix A  Data and supporting evidence")
+    story.append(p("A2  Continuation of the same five rows, covering all seven required comparison fields. Full-text sources [1-5].", "small"))
+    story.append(table([["Paper", "Data and protocol", "Baselines and evidence", "Resources and reproducibility", "Limitations and connections"], *[
         [item["name"], item["data"], item["evidence"], item["resources"], item["limits"]] for item in lit]],
         [92, 163, 170, 162, 163], "matrix"))
 
     story.append(NextPageTemplate("portrait"))
-    page("Kaynakça ve yeniden üretim kaydı")
+    page("References and reproduction record")
     refs = [
-        ("[1] Tian, Y., Shi, J., Li, B., Duan, Z. ve Xu, C. (2018). Audio-Visual Event Localization in Unconstrained Videos. ECCV.", lit[0]["url"]),
-        ("[2] Xuan, H., Zhang, Z., Chen, S., Yang, J. ve Yan, Y. (2020). Cross-Modal Attention Network for Temporal Inconsistent Audio-Visual Event Localization. AAAI.", lit[1]["url"]),
-        ("[3] Zhou, J., Zheng, L., Zhong, Y., Hao, S. ve Wang, M. (2021). Positive Sample Propagation Along the Audio-Visual Event Line. CVPR.", lit[2]["url"]),
-        ("[4] Xia ve Zhao (2022). Cross-Modal Background Suppression for Audio-Visual Event Localization. CVPR.", lit[3]["url"]),
-        ("[5] Liu vd. (2025). Audio-Visual Semantic Graph Network for Audio-Visual Event Localization. CVPR.", lit[4]["url"]),
-        ("[6] Tian vd. AVE-ECCV18 kaynak kodu ve checkpoint. Sabit revizyon 93f843fed72fb17394df76330df958b0c2dbde76.", "https://github.com/YapengTian/AVE-ECCV18"),
-        ("[7] AVE yazarlarının ses ve görüntü özellik bağlantıları.", "https://github.com/YapengTian/AVE-ECCV18#ave-dataset--features"),
-        ("[8] LECOO/AVE ses özelliği aynası. Erişim 10 Kasım 2026.", "https://huggingface.co/datasets/LECOO/AVE/tree/main"),
-        ("[9] Çetinkaya, E. YZM5110 Multimodal Learning, Hafta 1-5 slaytları ve Research Project yönergesi. 2026. Kullanıcı tarafından sağlanan ders materyalleri.", None),
-        ("[10] AV-AND deposu. Kontrollü temporal misalignment örnekleri.", "https://github.com/cataug/AV-AND#temporal-misalignment"),
+        ("[1] Tian, Y., Shi, J., Li, B., Duan, Z. and Xu, C. (2018). Audio-Visual Event Localization in Unconstrained Videos. ECCV.", lit[0]["url"]),
+        ("[2] Xuan, H., Zhang, Z., Chen, S., Yang, J. and Yan, Y. (2020). Cross-Modal Attention Network for Temporal Inconsistent Audio-Visual Event Localization. AAAI.", lit[1]["url"]),
+        ("[3] Zhou, J., Zheng, L., Zhong, Y., Hao, S. and Wang, M. (2021). Positive Sample Propagation Along the Audio-Visual Event Line. CVPR.", lit[2]["url"]),
+        ("[4] Xia and Zhao (2022). Cross-Modal Background Suppression for Audio-Visual Event Localization. CVPR.", lit[3]["url"]),
+        ("[5] Liu et al. (2025). Audio-Visual Semantic Graph Network for Audio-Visual Event Localization. CVPR.", lit[4]["url"]),
+        ("[6] Tian et al. AVE-ECCV18 source code and checkpoint. Revision 93f843fed72fb17394df76330df958b0c2dbde76.", "https://github.com/YapengTian/AVE-ECCV18"),
+        ("[7] Authors' links to AVE audio and visual features.", "https://github.com/YapengTian/AVE-ECCV18#ave-dataset--features"),
+        ("[8] LECOO/AVE audio feature mirror. Accessed 10 November 2026.", "https://huggingface.co/datasets/LECOO/AVE/tree/main"),
+        ("[9] Cetinkaya, E. YZM5110 Multimodal Learning, Weeks 1-5 slides and Research Project instructions. 2026. Course materials supplied by the student.", None),
+        ("[10] AV-AND repository. Controlled temporal misalignment examples.", "https://github.com/cataug/AV-AND#temporal-misalignment"),
     ]
     for description, url in refs:
-        text = escape(description)
+        value = escape(description)
         if url:
-            text += f' <link href="{escape(url)}" color="#087b68">Kaynak bağlantısı</link>'
-        story.append(p(text, "small"))
-    story.append(p("Çalıştırılabilir kayıt", "h2"))
-    prose("""Kod, yapılandırma, JSON/CSV çıktıları, komutlar ve yapay zekâ beyanı teslim deposunda yer alır. Nihai teslim submission-v1, önceki yerel aday submission-v1-rc1 etiketiyle tanımlanır. Kod ve deneyler için README.md içindeki sıralı komutlar, tablolar için scripts/export_tables.py ve grafik için scripts/plot_ave_test.py kullanılır.
+            value += f' <link href="{escape(url)}" color="#087b68">Source</link>'
+        story.append(p(value, "small"))
+    story.append(p("Runnable submission", "h2"))
+    prose("""The repository contains code, fixed configurations, JSON/CSV outputs, commands and the AI disclosure. The English submission is pinned by the commit linked in the project handoff and GitHub history. A GitHub Release is optional. README.md lists exact execution commands. scripts/export_tables.py produces the tables and scripts/plot_ave_test.py produces the figure.
 
-9-10 Kasım deneyleri 11 Kasım'da teslim için paketlendi. Deneyler sırasında ayrı commit'ler oluşturulmadı. Araştırma planı aşama kayıtlarını korur. Yazar kodu, ders PDF'leri ve veri/özellik dosyaları depoda yeniden dağıtılmaz.""")
-    story.append(p("Yapılandırma SHA-256", "h2"))
+Experiments conducted on 9-10 November were packaged on 11 November. Separate commits were not recorded during the experiments. The project log preserves their stage records. Upstream code, course PDFs and feature files are obtained separately rather than redistributed here.""")
+    story.append(p("Configuration SHA-256", "h2"))
     digest = test["config_sha256"]
     story.append(p(digest[:32] + "<br/>" + digest[32:], "small"))
     doc.build(story)

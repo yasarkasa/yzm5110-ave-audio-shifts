@@ -122,11 +122,11 @@ Olay varlığı hedef ve ses kaynağı saniyeleri arasında değişen bölümler
 
 ### Adım 7 · Teslim paketinin hazırlanması
 
-11 Kasım 2026'da rapor yönergedeki sekiz bölüm sırasıyla hazırlandı. Beş makalenin yedi alanlı matrisi iki yatay ek sayfasına yerleştirildi. Türkçe rapor 13 sayfa ve adı `Kahraman_YZM5110_Research.pdf`. Düzenlenebilir sunum 15 slayt, kaynaklar ve konuşmacı notları içeriyor.
+11 Kasım 2026'da rapor yönergedeki sekiz bölüm sırasıyla hazırlandı. Beş makalenin yedi alanlı matrisi iki yatay ek sayfasına yerleştirildi. İlk Türkçe taslağın ardından rapor, sunum ve konuşmacı notları dersin dili olan İngilizceye çevrildi. Nihai İngilizce rapor 13 sayfa ve adı `Kahraman_YZM5110_Research.pdf`. Düzenlenebilir sunum 15 slayt, kaynaklar ve konuşmacı notları içeriyor.
 
 `README.md`, sabit bağımlılıklar, `prepare_ave.py`, küçük çalıştırma kontrolü ve sonuç JSON'undan tablo üretimi eklendi. Mevcut önbellekle veri hazırlama ve üç kliplik model kontrolü çalıştırıldı. Temiz bir makinede sıfırdan bütün indirme ve kurulum henüz yeniden denenmedi. Veri, ortam, büyük checkpoint'ler ve ders PDF'leri Git dışında tutuluyor. Codex'in somut katkıları raporda, son slaytta ve `AI_USAGE.md` içinde açıklanıyor.
 
-Depo `https://github.com/yasarkasa/yzm5110-ave-audio-shifts`. İlk herkese açık oluşturma denemesi otomatik onay incelemesinde durduruldu. Kullanıcının 11 Kasım'daki açık onayı ardından depo oluşturuldu ve dosyalar GitHub Desktop ile gönderildi. İlk yerel teslim adayı `submission-v1-rc1`, nihai teslim sürümü `submission-v1` etiketiyle tanımlanır.
+Depo `https://github.com/yasarkasa/yzm5110-ave-audio-shifts`. İlk herkese açık oluşturma denemesi otomatik onay incelemesinde durduruldu. Kullanıcının 11 Kasım'daki açık onayı ardından depo oluşturuldu ve dosyalar GitHub Desktop ile gönderildi. Önceki Türkçe taslağa ait `submission-v1-rc1` ve `submission-v1` yerel etiketleri tarihsel adaylardır. İngilizce teslim, GitHub geçmişindeki “Prepare English report, slides and submission documentation” commit’iyle sabitlenir. Yönerge commit veya etiket kabul ettiğinden GitHub Release oluşturulmadı.
 
 Sunum süresi yönergede belirtilmedi. Konuşmacı notları teknik savunmayı destekleyecek biçimde yazıldı. Öğrencinin kaynakları okuyup uygulamayı anladığını doğrulaması ve sözlü prova yapması teslim öncesinde tamamlanmalıdır.
 
@@ -210,3 +210,5 @@ Kaydırma ve maskeleme kodu Adım 4'te doğrulama bölümünde kontrol edildi. S
 - **10 Kasım 2026 · Codex.** Sabit ayarlarla özgün test koşusunu, kaynak video düzeyinde bootstrap ve örtüşme analizini uyguladı. Tahminlerden doğrulukları yeniden hesapladı, grafiği üretti ve düzelen veya yeni oluşan hataları belgeledi.
 - **11 Kasım 2026 · Codex.** Raporu, düzenlenebilir sunumu, kurulum/veri erişimi ve yeniden çalıştırma belgelerini hazırladı. Beyan edilen araç ve katkıları AI_USAGE.md dosyasına ekledi. Herkese açık GitHub oluşturma için otomatik onay engelini kaydetti.
 - **11 Kasım 2026 · Codex.** Kullanıcının açık onayıyla herkese açık GitHub deposunu oluşturdu ve dosyaları GitHub Desktop ile gönderdi. Rapordaki ve sunumdaki bekleyen yayımlama notlarını kaldırdı.
+
+- **11 Kasım 2026 · Codex.** Kullanıcının dil düzeltmesi üzerine raporu, 15 slaytı ve konuşmacı notlarını, literatür matrisini, test yorumlarını ve teslim belgelerini İngilizceye çevirdi. Tüm rapor sayfaları ve slaytlar görsel olarak kontrol edildi. Deney kodu, sabit ayarlar ve ölçülmüş JSON/CSV sonuçları değiştirilmedi.
