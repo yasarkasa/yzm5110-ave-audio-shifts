@@ -6,6 +6,7 @@ This project shifts audio relative to video by 0, ±1 and ±2 seconds in Tian et
 
 ## Submission files
 
+- [Submitted version (commit f603e66)](https://github.com/yasarkasa/yzm5110-ave-audio-shifts/tree/f603e6627d4efda8bd89e1269ce552daa584dc85) with the submitted report and final five-slide presentation.
 - [Research report in English](output/pdf/Kahraman_YZM5110_Research.pdf)
 - [Editable presentation in English](output/slides/Kahraman_YZM5110_Presentation.pptx)
 - [Five-paper comparison and synthesis](MAKALE-KARSILASTIRMA.md)
@@ -17,6 +18,16 @@ This project shifts audio relative to video by 0, ±1 and ±2 seconds in Tian et
 On 402 original test clips, all shift conditions score the same six central seconds. Mean shifted accuracy at ±2 seconds is 69.69% for the baseline, 70.52% for local averaging and 69.96% for the norm-matched ablation. Local averaging gains 0.83 percentage points over the baseline (95% CI [0.29, 1.35]). The matched shift penalty D₂ is 1.89 points for the baseline and 1.31 for local averaging. The interval for the reduction in D₂ includes zero. The unmasked full-clip reproduction is 72.7363%, compared with the paper's published 72.7%.
 
 ![Shifted accuracy and paired method differences](results/ave_test_accuracy.png)
+
+## Verify the reported results offline
+
+From the repository root, run this command with Python 3 using only its standard library:
+
+~~~bash
+python3 scripts/verify_results.py
+~~~
+
+The check reads the committed per-second predictions and compares them with the saved experiment summaries. It verifies the full-clip result (2,924/4,020), all 30 shifted and matched-control accuracies, the 1.89-point baseline shift penalty, and the 0.83-point gain at ±2 seconds (86 corrected and 46 new errors). It exits with a nonzero status on a mismatch. No dataset, weights or package installation is needed. To rerun inference, bootstrap intervals and latency measurements, use the experiment commands below.
 
 ## Setup
 
@@ -81,8 +92,6 @@ Saved JSON and CSV results are tracked in Git. The final two commands rebuild ta
 ## Configuration and submitted revision
 
 [configs/ave_improvement.json](configs/ave_improvement.json) records the two-second radius, neighbor weight 0.5, scored indices 2-7, accuracy batch size 16 and single-clip latency protocol fixed before the test. Model weights remain those of the authors' checkpoint. The configuration SHA-256 is 5adb3bbca7243ed4d56d9ab1488811b69b522e6bb8b12246a24f08a568d8b846.
-
-The English submission is pinned by the commit linked in the project handoff and available in GitHub history. A GitHub Release is optional. Local tags from the preceding Turkish draft are historical candidates and do not identify the English submission.
 
 Experiments from 9-10 November were packaged on 11 November. Separate commits were not recorded during those runs. The [project log in Turkish](ARASTIRMA-PLANI.md) preserves the original stage records. The local course-material index also remains in Turkish as a working reference.
 

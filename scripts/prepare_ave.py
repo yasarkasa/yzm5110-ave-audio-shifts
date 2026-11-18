@@ -18,6 +18,7 @@ from ave_smoke import (
 
 AUDIO_URL = "https://huggingface.co/datasets/LECOO/AVE/resolve/main/audio_feature.h5?download=true"
 AUDIO_SHA256 = "6765e445a5a66853282964576222c7aaf895b563100b2d99f29ecfd413c7d8fc"
+UPSTREAM_URL = "https://github.com/YapengTian/AVE-ECCV18.git"
 
 
 def digest(path):
@@ -33,9 +34,19 @@ def prepare_upstream():
     UPSTREAM.mkdir(parents=True, exist_ok=True)
     if not (UPSTREAM / ".git").exists():
         git("init")
-        git("remote", "add", "origin", "https://github.com/YapengTian/AVE-ECCV18.git")
+    head = subprocess.run(["git", "-C", str(UPSTREAM), "rev-parse", "--verify", "--quiet", "HEAD"],
+                          stdout=subprocess.DEVNULL)
+    if head.returncode == 1:
+        if git("status", "--porcelain"):
+            raise ValueError("Cannot resume upstream setup with existing working-tree changes")
+        if "origin" not in git("remote").splitlines():
+            git("remote", "add", "origin", UPSTREAM_URL)
+        if git("remote", "get-url", "origin") != UPSTREAM_URL:
+            raise ValueError("Cannot resume upstream setup with an unexpected origin")
         git("fetch", "--depth", "1", "origin", UPSTREAM_REVISION)
-        git("checkout", "--detach", "FETCH_HEAD")
+        git("checkout", "--detach", UPSTREAM_REVISION)
+    else:
+        head.check_returncode()
     if git("rev-parse", "HEAD") != UPSTREAM_REVISION or git("status", "--porcelain"):
         raise ValueError("The upstream checkout must be clean at the pinned revision")
     for relative, expected in (("models.py", MODEL_SOURCE_SHA256), ("model/AV_att.pt", CHECKPOINT_SHA256)):
