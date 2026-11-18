@@ -1,6 +1,6 @@
 # Temporal audio shifts on AVE
 
-Eren Kahraman · Yildiz Technical University · YZM5110 Multimodal Learning · 2026
+Yaşar Eren Kahraman · Yildiz Technical University · YZM5110 Multimodal Learning · 2026
 
 This project shifts audio relative to video by 0, ±1 and ±2 seconds in Tian et al.'s published A+V-att model. Each offset is paired with an unshifted control receiving the same boundary mask. Local audio averaging is the single intervention. A norm-matched ablation helps distinguish the contribution of neighboring feature directions from changes in magnitude.
 

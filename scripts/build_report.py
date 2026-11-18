@@ -73,8 +73,8 @@ def footer(canvas, doc):
     canvas.saveState()
     canvas.setFont("Body", 7.4)
     canvas.setFillColor(MUTED)
-    canvas.drawString(46, height - 28, "Eren Kahraman  |  YZM5110  |  Audio shifts on AVE")
-    canvas.drawString(46, 25, "Research project  |  11 November 2026")
+    canvas.drawString(46, height - 28, "Yaşar Eren Kahraman  |  YZM5110  |  Audio shifts on AVE")
+    canvas.drawString(46, 25, "Research project  |  18 November 2026")
     canvas.drawRightString(width - 46, 25, str(doc.page))
     canvas.restoreState()
 
@@ -88,7 +88,7 @@ def build(repo_url, published):
     destination = ROOT / "output/pdf/Kahraman_YZM5110_Research.pdf"
     destination.parent.mkdir(parents=True, exist_ok=True)
     title = "Audio Visual Event Localization under Temporal Audio Shifts on AVE"
-    doc = BaseDocTemplate(str(destination), pagesize=A4, title=title, author="Eren Kahraman",
+    doc = BaseDocTemplate(str(destination), pagesize=A4, title=title, author="Yaşar Eren Kahraman",
                           leftMargin=46, rightMargin=46, topMargin=49, bottomMargin=44)
     templates = []
     for name, size in (("portrait", A4), ("landscape", landscape(A4))):
@@ -109,8 +109,8 @@ def build(repo_url, published):
         story.append(p(heading, "h1"))
 
     story.append(p(title, "title"))
-    story.append(p("Eren Kahraman<br/>Yildiz Technical University<br/>YZM5110 Multimodal Learning"
-                   "<br/>Research project · 11 November 2026", "small"))
+    story.append(p("Yaşar Eren Kahraman<br/>Yildiz Technical University<br/>YZM5110 Multimodal Learning"
+                   "<br/>Research project · 18 November 2026", "small"))
     story.append(p(f'<b>Public repository</b><br/><link href="{escape(repo_url)}" color="#087b68">'
                    f'{escape(repo_url)}</link>', "small"))
     if not published:
@@ -273,7 +273,7 @@ Open questions include subsecond and variable delays, natural inconsistency, oth
     story.append(p("AI assistance disclosure", "h2"))
     prose("""OpenAI Codex assisted with source search, the comparison matrix and synthesis draft, CPU adaptation of the authors' implementation, data checks, experiment scripts and local execution, bootstrap and failure analysis, figures, and report/presentation editing. The topic, hypothesis, matched controls and local averaging/ablation design were developed during the conversation with Codex suggestions. Numerical results come from saved local script outputs.
 
-Section 7 of the assignment permits disclosed assistance. Eren Kahraman remains responsible for reading sources, understanding the implementation, assessing the experimental design, checking claims and citations, and defending the conclusions. Specific contributions are documented in AI_USAGE.md.""")
+Codex also assisted on 18 November with the final slide notes, offline results check, setup fix and submission edits. Section 7 of the assignment permits disclosed assistance. Yaşar Eren Kahraman remains responsible for reading sources, understanding the implementation, assessing the experimental design, checking claims and citations, and defending the conclusions. Specific contributions are documented in AI_USAGE.md.""")
 
     story.append(NextPageTemplate("landscape"))
     page("Appendix A  Comparison of five papers")
@@ -308,7 +308,7 @@ Section 7 of the assignment permits disclosed assistance. Eren Kahraman remains 
             value += f' <link href="{escape(url)}" color="#087b68">Source</link>'
         story.append(p(value, "small"))
     story.append(p("Runnable submission", "h2"))
-    prose("""The repository contains code, fixed configurations, JSON/CSV outputs, commands and the AI disclosure. The English submission is pinned by the commit linked in the project handoff and GitHub history. A GitHub Release is optional. README.md lists exact execution commands. scripts/export_tables.py produces the tables and scripts/plot_ave_test.py produces the figure.
+    prose("""The repository contains code, fixed configurations, JSON/CSV outputs, commands and the AI disclosure. The README links to the submitted revision. README.md lists exact execution commands. scripts/export_tables.py produces the tables and scripts/plot_ave_test.py produces the figure.
 
 Experiments conducted on 9-10 November were packaged on 11 November. Separate commits were not recorded during the experiments. The project log preserves their stage records. Upstream code, course PDFs and feature files are obtained separately rather than redistributed here.""")
     story.append(p("Configuration SHA-256", "h2"))
